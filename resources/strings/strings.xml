@@ -1,0 +1,16 @@
+<strings>
+    <string id="AppName">Jacques WatchFace for Venu 2</string>
+    <string id="AppVersion">App Version</string>
+    <string id="BGColorTitle">Background Color</string>
+    <string id="DateColorTitle">Date Color</string>
+    <string id="HRColorTitle">HR Color</string>
+    <string id="ConnectColorTitle">Connection  Color</string>
+    <string id="HourColorTitle">Hour Color</string>
+    <string id="MinuteColorTitle">Minute Color</string>
+    <string id="SecColorTitle">Seconds Color</string>
+    <string id="BodyBattColorTitle">Body Battery Color</string>
+    <string id="StressColorTitle">Stress Score Color</string>
+    <string id="StepsColorTitle">Steps Color</string>
+    <string id="TempColorTitle">Temperature Color</string>
+    <string id="BattColorTitle">Battery Color</string>
+</strings>

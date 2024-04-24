@@ -1,0 +1,42 @@
+<!--For use via Connect IQ-->
+<settings>
+    <setting propertyKey="@Properties.AppVersion" title="@Strings.AppVersion">
+        <settingConfig type="alphaNumeric" readonly="true" />
+    </setting>
+    <setting propertyKey="@Properties.BGColor" title="@Strings.BGColorTitle">
+        <settingConfig type="alphaNumeric" />
+    </setting>
+    <setting propertyKey="@Properties.DateColor" title="@Strings.DateColorTitle">
+        <settingConfig type="alphaNumeric" />
+    </setting>
+    <setting propertyKey="@Properties.HRColor" title="@Strings.HRColorTitle">
+        <settingConfig type="alphaNumeric" />
+    </setting>
+    <setting propertyKey="@Properties.ConnectColor" title="@Strings.ConnectColorTitle">
+        <settingConfig type="alphaNumeric" />
+    </setting>
+    <setting propertyKey="@Properties.HourColor" title="@Strings.HourColorTitle">
+        <settingConfig type="alphaNumeric" />
+    </setting>
+    <setting propertyKey="@Properties.MinuteColor" title="@Strings.MinuteColorTitle">
+        <settingConfig type="alphaNumeric" />
+    </setting>
+    <setting propertyKey="@Properties.SecColor" title="@Strings.SecColorTitle">
+        <settingConfig type="alphaNumeric" />
+    </setting>
+    <setting propertyKey="@Properties.BodyBattColor" title="@Strings.BodyBattColorTitle">
+        <settingConfig type="alphaNumeric" />
+    </setting>
+    <setting propertyKey="@Properties.StressColor" title="@Strings.StressColorTitle">
+        <settingConfig type="alphaNumeric" />
+    </setting>
+    <setting propertyKey="@Properties.StepsColor" title="@Strings.StepsColorTitle">
+        <settingConfig type="alphaNumeric" />
+    </setting>
+    <setting propertyKey="@Properties.TempColor" title="@Strings.TempColorTitle">
+        <settingConfig type="alphaNumeric" />
+    </setting>
+    <setting propertyKey="@Properties.BattColor" title="@Strings.BattColorTitle">
+        <settingConfig type="alphaNumeric" />
+    </setting>
+</settings>
