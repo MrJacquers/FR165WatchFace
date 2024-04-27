@@ -66,7 +66,20 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
 
     if (_lowPwrMode) {
       //System.println("low power mode");
-      //return;
+      if (_settings.colorTest) {
+        var colors = [Graphics.COLOR_WHITE, Graphics.COLOR_LT_GRAY, Graphics.COLOR_DK_GRAY,
+                      Graphics.COLOR_RED, Graphics.COLOR_DK_RED, Graphics.COLOR_ORANGE, Graphics.COLOR_YELLOW,
+                      Graphics.COLOR_GREEN, Graphics.COLOR_DK_GREEN, Graphics.COLOR_BLUE, Graphics.COLOR_DK_BLUE,
+                      Graphics.COLOR_PURPLE, Graphics.COLOR_PINK];
+        var y = 3;
+        for (var i=0; i < colors.size(); i++) {
+          y += 15;
+          dc.setColor(colors[i], -1);
+          dc.fillRectangle(0, y, _devSize, 15);
+          y += 3;
+        }      
+        return;
+      }
     }
 
     //System.println("drawing");

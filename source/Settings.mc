@@ -4,7 +4,7 @@ import Toybox.Application.Storage;
 class Settings {
     var bgColor;
     var dateColor;
-    var hrColor; // TODO: hr zone colors
+    var hrColor;
     var connectColor;
     var hourColor;
     var minuteColor;
@@ -13,7 +13,8 @@ class Settings {
     var stressColor;
     var stepsColor;
     var tempColor;
-    var battColor; // TODO: battery % colors
+    var battColor;
+    var colorTest = false;
 
     var showGrid;
     var appAODEnabled = false;
@@ -35,6 +36,7 @@ class Settings {
             stepsColor = Application.Properties.getValue("StepsColor").toNumberWithBase(16);
             tempColor = Application.Properties.getValue("TempColor").toNumberWithBase(16);
             battColor = Application.Properties.getValue("BattColor").toNumberWithBase(16);
+            colorTest = Application.Properties.getValue("ColorTest");
         }
 
         // On-device settings, accessible via select watch face edit menu.
