@@ -32,6 +32,6 @@ class WatchDelegate extends WatchFaceDelegate {
   }
 
   function onPowerBudgetExceeded(powerInfo as WatchUi.WatchFacePowerInfo) as Void {
-    System.println("Power budget exceeded. Allowed " + powerInfo.executionTimeLimit + " but avg was " + powerInfo.executionTimeAverage);
+    System.println("onPowerBudgetExceeded: Allowed " + powerInfo.executionTimeLimit + " but avg was " + powerInfo.executionTimeAverage);
   }
 }

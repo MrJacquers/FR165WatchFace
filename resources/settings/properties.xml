@@ -1,16 +1,16 @@
 <properties>
     <!-- Color Codes: https://developer.garmin.com/connect-iq/api-docs/Toybox/Graphics.html -->
     <property id="AppVersion" type="string">1.0.0</property>
-    <property id="BGColor" type="string">000000</property>
-    <property id="DateColor" type="string">AAAAAA</property>
-    <property id="HRColor" type="string">FF0000</property>
-    <property id="ConnectColor" type="string">55AA55</property>
-    <property id="HourColor" type="string">55AA55</property>
-    <property id="MinuteColor" type="string">AAAAAA</property>
-    <property id="SecColor" type="string">55AA55</property>
-    <property id="BodyBattColor" type="string">AAAAAA</property>
-    <property id="StressColor" type="string">AAAAAA</property>
-    <property id="StepsColor" type="string">AAAAAA</property>
-    <property id="TempColor" type="string">AAAAAA</property>
-    <property id="BattColor" type="string">AAAAAA</property>
+    <property id="BGColor" type="string">-1</property>
+    <property id="DateColor" type="string">FFFFFF</property>
+    <property id="HRColor" type="string">FF5500</property>
+    <property id="ConnectColor" type="string">00AAFF</property>
+    <property id="HourColor" type="string">FFFF00</property>
+    <property id="MinuteColor" type="string">FFFFFF</property>
+    <property id="SecColor" type="string">FF5500</property>
+    <property id="BodyBattColor" type="string">FFFFFF</property>
+    <property id="StressColor" type="string">FFFFFF</property>
+    <property id="StepsColor" type="string">FFFFFF</property>
+    <property id="TempColor" type="string">FFFFFF</property>
+    <property id="BattColor" type="string">FFFFFF</property>
 </properties>

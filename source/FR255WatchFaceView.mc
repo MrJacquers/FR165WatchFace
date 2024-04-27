@@ -8,7 +8,6 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
   private var _devSize;
   private var _devCenter;
   private var _timeFont;
-  //private var _blanked = false;
   private var _hidden;
   private var _lowPwrMode;
   private var _settings;
@@ -24,6 +23,10 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
     _dataFields = new DataFields();
     _dataFields.registerComplications();
     _dataFields.battLogEnabled = _settings.battLogEnabled;
+
+    /*if (Toybox.WatchUi.WatchFace has :onPartialUpdate) {
+      System.println("onPartialUpdate available");
+    }*/
   }
 
   function loadSettings() {
@@ -56,19 +59,18 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
     //System.print("onUpdate: ");
 
     if (_hidden) {
-        return;
-    }
-
-    if (_lowPwrMode) {
-      //System.println("low power mode");      
-      if (_settings.battLogEnabled) {
-        _dataFields.getBattery();
-      }
+      // I haven't seen this message and don't think it will ever be shown.
+      dc.drawText(_devCenter, _devCenter, Graphics.FONT_MEDIUM, "Hidden", Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
       return;
     }
 
+    if (_lowPwrMode) {
+      //System.println("low power mode");
+      //return;
+    }
+
     //System.println("drawing");
-    clearScreen(dc);
+    //clearScreen(dc); // no need for this on actual device.
 
     // lines for positioning
     //if (_settings.showGrid) {
@@ -78,17 +80,17 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
     // Get the date info, the strings will be localized.
     var dateInfo = Gregorian.info(Time.now(), Time.FORMAT_MEDIUM);
 
-    drawHR(dc);
     drawDate(dc, dateInfo);
-    drawConnectionStatus(dc);
     drawHour(dc, dateInfo);
     drawMinutes(dc, dateInfo);
     if (!_lowPwrMode) {
-        drawSeconds(dc, dateInfo.sec);
+      drawHR(dc);
+      drawConnectionStatus(dc);
+      drawSeconds(dc, dateInfo.sec);
+      drawBodyBattery(dc);
+      drawSteps(dc);
+      drawTemperature(dc);
     }
-    drawStress(dc);
-    drawSteps(dc);
-    drawTemperature(dc);
     drawBattery(dc);
   }
 
@@ -98,54 +100,59 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
   }
 
   function drawHR(dc) {
-    dc.setColor(_settings.hrColor, -1);
-    dc.drawText(_devCenter, 35, Graphics.FONT_TINY, _dataFields.getHeartRate(), Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+    dc.setColor(_settings.hrColor, _settings.bgColor);
+    dc.drawText(_devCenter, 35, Graphics.FONT_SMALL, _dataFields.getHeartRate(), Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
   }
 
   function drawDate(dc, dateInfo as Gregorian.Info) {
-    dc.setColor(_settings.dateColor, -1);
-    dc.drawText(_devCenter, 70, Graphics.FONT_TINY, _dataFields.getDate(dateInfo), Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+    dc.setColor(_settings.dateColor, _settings.bgColor);
+    dc.drawText(_devCenter, 70, Graphics.FONT_SMALL, _dataFields.getDate(dateInfo), Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
   }
 
   function drawConnectionStatus(dc) {
-    dc.setColor(_settings.connectColor, -1);
+    dc.setColor(_settings.connectColor, _settings.bgColor);
     var cs = System.getDeviceSettings().phoneConnected ? "B" : "";
-    dc.drawText(24, _devCenter, Graphics.FONT_TINY, cs, Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER);
+    dc.drawText(24, _devCenter, Graphics.FONT_SMALL, cs, Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER);
   }
 
   function drawHour(dc, dateInfo as Gregorian.Info) {
-    dc.setColor(_settings.hourColor, -1);
-    dc.drawText(120, _devCenter, _timeFont, dateInfo.hour.format("%02d"), Graphics.TEXT_JUSTIFY_RIGHT | Graphics.TEXT_JUSTIFY_VCENTER);
+    dc.setColor(_settings.hourColor, _settings.bgColor);
+    dc.drawText(125, _devCenter, _timeFont, dateInfo.hour.format("%02d"), Graphics.TEXT_JUSTIFY_RIGHT | Graphics.TEXT_JUSTIFY_VCENTER);
   }
 
   function drawMinutes(dc, dateInfo as Gregorian.Info) {
-    dc.setColor(_settings.minuteColor, -1);
-    dc.drawText(140, _devCenter, _timeFont, dateInfo.min.format("%02d"), Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER);
+    dc.setColor(_settings.minuteColor, _settings.bgColor);
+    dc.drawText(135, _devCenter, _timeFont, dateInfo.min.format("%02d"), Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER);
   }
 
-  function drawSeconds(dc, sec) {
-    dc.setColor(_settings.secColor, -1);
-    dc.drawText(236, 94, Graphics.FONT_TINY, sec.format("%02d"), Graphics.TEXT_JUSTIFY_CENTER);
+  function drawSeconds(dc, sec as Number) {
+    dc.setColor(_settings.secColor, _settings.bgColor);
+    dc.drawText(235, 92, Graphics.FONT_SMALL, sec.format("%02d"), Graphics.TEXT_JUSTIFY_CENTER);
+  }
+
+  function drawBodyBattery(dc) {
+    dc.setColor(_settings.bodyBattColor, _settings.bgColor);
+    dc.drawText(60, 190, Graphics.FONT_SMALL, _dataFields.getBodyBattery(), Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
   }
 
   function drawStress(dc) {
-    dc.setColor(_settings.stressColor, -1);
-    dc.drawText(60, 190, Graphics.FONT_TINY, _dataFields.getStress(), Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+    dc.setColor(_settings.stressColor, _settings.bgColor);
+    dc.drawText(60, 190, Graphics.FONT_SMALL, _dataFields.getStress(), Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
   }
 
   function drawSteps(dc) {
-    dc.setColor(_settings.stepsColor, -1);
-    dc.drawText(_devCenter, 190, Graphics.FONT_TINY, _dataFields.getSteps(), Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+    dc.setColor(_settings.stepsColor, _settings.bgColor);
+    dc.drawText(_devCenter, 190, Graphics.FONT_SMALL, _dataFields.getSteps(), Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
   }
 
   function drawTemperature(dc) {
-    dc.setColor(_settings.tempColor, -1);
-    dc.drawText(200, 190, Graphics.FONT_TINY, _dataFields.getTemperature(), Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+    dc.setColor(_settings.tempColor, _settings.bgColor);
+    dc.drawText(200, 190, Graphics.FONT_SMALL, _dataFields.getTemperature(), Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
   }
 
   function drawBattery(dc) {
-    dc.setColor(_settings.battColor, -1);
-    dc.drawText(_devCenter, 230, Graphics.FONT_TINY, _dataFields.getBattery(), Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+    dc.setColor(_settings.battColor, _settings.bgColor);
+    dc.drawText(_devCenter, _lowPwrMode ? 190 : 230, Graphics.FONT_SMALL, _dataFields.getBattery(), Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
   }
 
   // for layout position debugging
@@ -180,7 +187,6 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
     //System.println("onEnterSleep");    
     _lowPwrMode = true;
     _dataFields.unsubscribeStress();
-    //_blanked = false;
     //WatchUi.requestUpdate();
   }
 
