@@ -21,7 +21,7 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
     loadSettings();
     
     _dataFields = new DataFields();
-    _dataFields.registerComplications();
+    //_dataFields.registerComplications();
     _dataFields.battLogEnabled = _settings.battLogEnabled;
 
     /*if (Toybox.WatchUi.WatchFace has :onPartialUpdate) {
@@ -49,7 +49,7 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
     //_settings.loadSettings();
     _hidden = false;
     _lowPwrMode = false;
-    _dataFields.subscribeStress();
+    //_dataFields.subscribeStress();
   }
 
   // Updates the View.
@@ -96,13 +96,13 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
     drawDate(dc, dateInfo);
     drawHour(dc, dateInfo);
     drawMinutes(dc, dateInfo);
+    drawConnectionStatus(dc);
     if (!_lowPwrMode) {
       drawHR(dc);
-      drawConnectionStatus(dc);
       drawSeconds(dc, dateInfo.sec);
       drawBodyBattery(dc);
       drawSteps(dc);
-      drawTemperature(dc);
+      drawTimeToRecovery(dc);
     }
     drawBattery(dc);
   }
@@ -123,9 +123,10 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
   }
 
   function drawConnectionStatus(dc) {
-    dc.setColor(_settings.connectColor, _settings.bgColor);
-    var cs = System.getDeviceSettings().phoneConnected ? "B" : "";
-    dc.drawText(24, _devCenter, Graphics.FONT_SMALL, cs, Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER);
+    if (System.getDeviceSettings().phoneConnected) {
+      dc.setColor(_settings.connectColor, _settings.bgColor);    
+      dc.drawText(24, _devCenter, Graphics.FONT_SMALL, "B", Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER);
+    }
   }
 
   function drawHour(dc, dateInfo as Gregorian.Info) {
@@ -158,9 +159,9 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
     dc.drawText(_devCenter, 190, Graphics.FONT_SMALL, _dataFields.getSteps(), Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
   }
 
-  function drawTemperature(dc) {
-    dc.setColor(_settings.tempColor, _settings.bgColor);
-    dc.drawText(200, 190, Graphics.FONT_SMALL, _dataFields.getTemperature(), Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+  function drawTimeToRecovery(dc) {
+    dc.setColor(_settings.timeToRecoveryColor, _settings.bgColor);
+    dc.drawText(200, 190, Graphics.FONT_SMALL, _dataFields.getTimeToRecovery(), Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
   }
 
   function drawBattery(dc) {
@@ -192,14 +193,14 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
   function onHide() as Void {
     //System.println("onHide");
     _hidden = true;
-    _dataFields.unsubscribeStress();
+    //_dataFields.unsubscribeStress();
   }
 
   // Terminate any active timers and prepare for slow updates (once a minute).
   function onEnterSleep() as Void {
     //System.println("onEnterSleep");    
     _lowPwrMode = true;
-    _dataFields.unsubscribeStress();
+    //_dataFields.unsubscribeStress();
     //WatchUi.requestUpdate();
   }
 
@@ -207,7 +208,7 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
   function onExitSleep() as Void {
     //System.println("onExitSleep");
     _lowPwrMode = false;
-    _dataFields.subscribeStress();
+    //_dataFields.subscribeStress();
     //WatchUi.requestUpdate();
   }
 }

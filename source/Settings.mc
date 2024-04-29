@@ -12,7 +12,7 @@ class Settings {
     var bodyBattColor;
     var stressColor;
     var stepsColor;
-    var tempColor;
+    var timeToRecoveryColor;
     var battColor;
     var colorTest = false;
 
@@ -34,7 +34,7 @@ class Settings {
             bodyBattColor = Application.Properties.getValue("BodyBattColor").toNumberWithBase(16);
             stressColor = Application.Properties.getValue("StressColor").toNumberWithBase(16);
             stepsColor = Application.Properties.getValue("StepsColor").toNumberWithBase(16);
-            tempColor = Application.Properties.getValue("TempColor").toNumberWithBase(16);
+            timeToRecoveryColor = Application.Properties.getValue("TimeToRecoveryColor").toNumberWithBase(16);
             battColor = Application.Properties.getValue("BattColor").toNumberWithBase(16);
             colorTest = Application.Properties.getValue("ColorTest");
         }

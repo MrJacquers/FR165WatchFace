@@ -10,7 +10,7 @@
     <property id="BodyBattColor" type="string">AAAAAA</property>
     <property id="StressColor" type="string">AAAAAA</property>
     <property id="StepsColor" type="string">AAAAAA</property>
-    <property id="TempColor" type="string">AAAAAA</property>
+    <property id="TimeToRecoveryColor" type="string">AAAAAA</property>
     <property id="BattColor" type="string">AAAAAA</property>
     <property id="ColorTest" type="boolean">false</property>
 </properties>

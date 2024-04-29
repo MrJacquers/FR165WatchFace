@@ -10,7 +10,7 @@
     <string id="BodyBattColorTitle">Body Battery Color</string>
     <string id="StressColorTitle">Stress Score Color</string>
     <string id="StepsColorTitle">Steps Color</string>
-    <string id="TempColorTitle">Temperature Color</string>
+    <string id="TimeToRecoveryColorTitle">Time to Recovery Color</string>
     <string id="BattColorTitle">Battery Color</string>
     <string id="ColorTestTitle">Color Test</string>
 </strings>

@@ -56,15 +56,6 @@ class DataFields {
         return "--";
     }
 
-    // hr from history
-    function getHeartRateHist() {
-        var sample = ActivityMonitor.getHeartRateHistory(1, true).next();
-        if (sample != null && sample.heartRate != null) {
-            return "[" + sample.heartRate + "]";
-        }
-        return "--";
-    }
-    
     function getBodyBattery() {
         // https://developer.garmin.com/connect-iq/api-docs/Toybox/SensorHistory.html
         if ((Toybox has :SensorHistory) && (SensorHistory has :getBodyBatteryHistory)) {
@@ -78,6 +69,8 @@ class DataFields {
     }
 
     function getStress() {
+        // return ActivityMonitor.getInfo().stressScore + "%"; // API Level 5.0.0 
+
         if (_stress != null) {
             return _stress + "%";
         }
@@ -98,15 +91,8 @@ class DataFields {
         return ActivityMonitor.getInfo().steps;
     }
 
-    function getTemperature() {
-        if ((Toybox has :SensorHistory) && (SensorHistory has :getTemperatureHistory)) {
-            var sample = SensorHistory.getTemperatureHistory({ :period => 1, :order => SensorHistory.ORDER_NEWEST_FIRST }).next();
-            if (sample != null && sample.data != null) {
-                return sample.data.format("%d") + "°";
-            }
-            return "--";
-        }
-        return "n/a";
+    function getTimeToRecovery() {
+        return ActivityMonitor.getInfo().timeToRecovery;
     }
 
     function getBattery() {
