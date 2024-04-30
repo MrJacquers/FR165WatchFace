@@ -59,8 +59,7 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
     //System.print("onUpdate: ");
 
     if (_hidden) {
-      // I haven't seen this message and don't think it will ever be shown.
-      dc.drawText(_devCenter, _devCenter, Graphics.FONT_MEDIUM, "Hidden", Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+      //System.println("hidden");
       return;
     }
 
@@ -82,8 +81,8 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
       }
     }
 
+    clearScreen(dc);
     //System.println("drawing");
-    //clearScreen(dc); // no need for this on actual device.
 
     // lines for positioning
     //if (_settings.showGrid) {
@@ -107,6 +106,7 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
     drawBattery(dc);
   }
 
+  (:debug)  // no need for this on actual device.
   private function clearScreen(dc as Dc) {
     dc.setColor(0, _settings.bgColor);
     dc.clear();
@@ -198,10 +198,10 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
 
   // Terminate any active timers and prepare for slow updates (once a minute).
   function onEnterSleep() as Void {
-    //System.println("onEnterSleep");    
+    //System.println("onEnterSleep");
     _lowPwrMode = true;
     //_dataFields.unsubscribeStress();
-    //WatchUi.requestUpdate();
+    //WatchUi.requestUpdate(); // not really required, onUpdate will be called anyway.
   }
 
   // The user has just looked at their watch. Timers and animations may be started here.
@@ -209,6 +209,6 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
     //System.println("onExitSleep");
     _lowPwrMode = false;
     //_dataFields.subscribeStress();
-    //WatchUi.requestUpdate();
+    //WatchUi.requestUpdate(); // not really required, onUpdate will be called anyway.
   }
 }

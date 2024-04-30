@@ -21,10 +21,10 @@ class FR255WatchFaceApp extends Application.AppBase {
     }
 
     // Return the initial view of your application here
-    function getInitialView() as Array<Views or InputDelegates>? {
+    function getInitialView() as [Views] or [Views, InputDelegates] {
         //System.println("getInitialView");
         _faceView = new FR255WatchFaceView();
-        return [_faceView, new WatchDelegate()] as Array<Views or InputDelegates>;
+        return [_faceView, new WatchDelegate()];
     }
 
     /*function getSettingsView() {

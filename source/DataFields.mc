@@ -69,21 +69,7 @@ class DataFields {
     }
 
     function getStress() {
-        // return ActivityMonitor.getInfo().stressScore + "%"; // API Level 5.0.0 
-
-        if (_stress != null) {
-            return _stress + "%";
-        }
-
-        if ((Toybox has :SensorHistory) && (SensorHistory has :getStressHistory)) {
-            var sample = SensorHistory.getStressHistory({ :period => 1, :order => SensorHistory.ORDER_NEWEST_FIRST }).next();
-            if (sample != null /* && sample.data != null && sample.data >= 0 && sample.data <= 100*/) {
-                return "[" + sample.data.format("%d") + "%" + "]";
-            }
-            return "--"; // unavailable, e.g. watch hasn't been worn for a while
-        }
-
-        return "n/a"; // not available at all :(
+        return ActivityMonitor.getInfo().stressScore + "%"; // rolling 30s average
     }
 
     function getSteps() {
