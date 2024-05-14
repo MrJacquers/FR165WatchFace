@@ -21,8 +21,8 @@ class Settings {
     var battLogEnabled = false;
 
     function loadSettings() {
-        // https://developer.garmin.com/connect-iq/core-topics/properties-and-app-settings/
         // Set via ConnectIQ App.
+        // https://developer.garmin.com/connect-iq/core-topics/properties-and-app-settings/
         if (Toybox.Application has :Properties) {
             bgColor = Application.Properties.getValue("BGColor").toNumberWithBase(16);
             dateColor = Application.Properties.getValue("DateColor").toNumberWithBase(16);
@@ -48,9 +48,9 @@ class Settings {
     }
 
     function getValue(name, defaultValue) {
-        var setting = Storage.getValue(name);
-        if (setting != null) {
-            return setting;
+        var value = Storage.getValue(name);
+        if (value != null) {
+            return value;
         } else {
             return defaultValue;
         }

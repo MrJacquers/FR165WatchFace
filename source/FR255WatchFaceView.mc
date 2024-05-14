@@ -4,7 +4,7 @@ import Toybox.System;
 import Toybox.WatchUi;
 import Toybox.Time.Gregorian;
 
-class FR255WatchFaceView extends WatchUi.WatchFace {  
+class FR255WatchFaceView extends WatchUi.WatchFace {
   private var _devSize;
   private var _devCenter;
   private var _timeFont;
@@ -13,14 +13,14 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
   private var _settings;
   private var _dataFields;
   private var _dataFieldLayout;
-  
+
   function initialize() {
     //System.println("view initialize");
     WatchFace.initialize();
-    
+
     _settings = new Settings();
     loadSettings();
-    
+
     _dataFields = new DataFields();
     //_dataFields.registerComplications();
     _dataFields.battLogEnabled = _settings.battLogEnabled;
@@ -41,24 +41,36 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
     _devCenter = _devSize / 2;
     _timeFont = WatchUi.loadResource(Rez.Fonts.id_monofonto_outline);
 
-    _dataFieldLayout = new [10];
+    // example of font height
+    //var dim = dc.getTextDimensions("123", Graphics.FONT_SMALL);
+    //var h = dc.getFontHeight(Graphics.FONT_SMALL);
+    //System.println(dim + " > " + h);
+
+    var dataFieldFont = Graphics.FONT_SMALL;
+    var dataFontDim = dc.getTextDimensions("00", dataFieldFont);
+    var timeFontDim = dc.getTextDimensions("00", _timeFont);
 
     // 260x260 devCenter=130
-    // simple horizontal digital layout
-    _dataFieldLayout[0] = [_settings.hrColor, _devCenter, 35, Graphics.FONT_SMALL, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER];
-    _dataFieldLayout[1] = [_settings.dateColor, _devCenter, 70, Graphics.FONT_SMALL, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER];
-    _dataFieldLayout[2] = [_settings.connectColor, 24, _devCenter, Graphics.FONT_SMALL, Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER];
-    _dataFieldLayout[3] = [_settings.hourColor, _devCenter -5, _devCenter, _timeFont, Graphics.TEXT_JUSTIFY_RIGHT | Graphics.TEXT_JUSTIFY_VCENTER];
-    _dataFieldLayout[4] = [_settings.minuteColor, _devCenter + 5, _devCenter, _timeFont, Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER];
-    _dataFieldLayout[5] = [_settings.secColor, 235, 92, Graphics.FONT_SMALL, Graphics.TEXT_JUSTIFY_CENTER];
-    _dataFieldLayout[6] = [_settings.bodyBattColor, 60, 190, Graphics.FONT_SMALL, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER];
-    _dataFieldLayout[7] = [_settings.stepsColor, _devCenter, 190, Graphics.FONT_SMALL, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER];
-    _dataFieldLayout[8] = [_settings.timeToRecoveryColor, 200, 190, Graphics.FONT_SMALL, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER];
-    _dataFieldLayout[9] = [_settings.battColor, _devCenter, 230, Graphics.FONT_SMALL, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER];
+    // horizontal digital layout
+    var dateY = _devCenter - timeFontDim[1] / 2 - dataFontDim[1] / 2 - 10;
+    var hrY = dateY - dataFontDim[1] - 5;
+    var dataY = _devCenter + timeFontDim[1] / 2 + dataFontDim[1] / 2 + 10;
+    var battY = dataY + dataFontDim[1] + 10;
+    var secY = _devCenter - timeFontDim[1] / 2 - 4;
 
-    // simple vertical digital layout
-    //_dataFieldLayout[3] = [_settings.hourColor, _devCenter, _devCenter, _timeFont, Graphics.TEXT_JUSTIFY_CENTER];
-    //_dataFieldLayout[4] = [_settings.minuteColor, _devCenter, _devCenter, _timeFont, Graphics.TEXT_JUSTIFY_CENTER];
+    _dataFieldLayout = new [10];
+    _dataFieldLayout[0] = [_settings.hrColor, _devCenter, hrY, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER];
+    _dataFieldLayout[1] = [_settings.dateColor, _devCenter, dateY, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER];
+    _dataFieldLayout[2] = [_settings.connectColor, 20, _devCenter, dataFieldFont, Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER];
+    _dataFieldLayout[3] = [_settings.hourColor, _devCenter - 5, _devCenter, _timeFont, Graphics.TEXT_JUSTIFY_RIGHT | Graphics.TEXT_JUSTIFY_VCENTER];
+    _dataFieldLayout[4] = [_settings.minuteColor, _devCenter + 5, _devCenter, _timeFont, Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER];
+    _dataFieldLayout[5] = [_settings.secColor, 235, secY, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER];
+    _dataFieldLayout[6] = [_settings.bodyBattColor, _devCenter - 70, dataY, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER];
+    _dataFieldLayout[7] = [_settings.stepsColor, _devCenter, dataY, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER];
+    _dataFieldLayout[8] = [_settings.timeToRecoveryColor, _devCenter + 70, dataY, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER];
+    _dataFieldLayout[9] = [_settings.battColor, _devCenter, battY, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER];
+
+    // TODO: vertical digital layout
   }
 
   // Called when this View is brought to the foreground.
@@ -86,27 +98,17 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
     if (_lowPwrMode) {
       //System.println("low power mode");
       if (_settings.colorTest) {
-        var colors = [Graphics.COLOR_WHITE, Graphics.COLOR_LT_GRAY, Graphics.COLOR_DK_GRAY,
-                      Graphics.COLOR_RED, Graphics.COLOR_DK_RED, Graphics.COLOR_ORANGE, Graphics.COLOR_YELLOW,
-                      Graphics.COLOR_GREEN, Graphics.COLOR_DK_GREEN, Graphics.COLOR_BLUE, Graphics.COLOR_DK_BLUE,
-                      Graphics.COLOR_PURPLE, Graphics.COLOR_PINK];
-        var y = 3;
-        for (var i=0; i < colors.size(); i++) {
-          y += 15;
-          dc.setColor(colors[i], -1);
-          dc.fillRectangle(0, y, _devSize, 15);
-          y += 3;
-        }      
+        drawTestPattern(dc, true);
         return;
       }
     }
 
-    clearScreen(dc);
     //System.println("drawing");
+    clearScreen(dc);
 
     // lines for positioning
     //if (_settings.showGrid) {
-      //drawGrid(dc);
+    //drawGrid(dc);
     //}
 
     // Get the date info, the strings will be localized.
@@ -132,10 +134,15 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
     drawDataField(dc, _dataFieldLayout[9], _dataFields.getBattery());
   }
 
-  (:debug)  // no need for this on actual device.
+  (:debug)
   private function clearScreen(dc as Dc) {
     dc.setColor(0, _settings.bgColor);
     dc.clear();
+  }
+
+  (:release)
+  private function clearScreen(dc as Dc) {
+    // no need for this on actual device.
   }
 
   function drawDataField(dc, info as Array, text) {
@@ -150,7 +157,7 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
 
     dc.setColor(Graphics.COLOR_DK_GRAY, -1);
     do {
-      i += step;      
+      i += step;
       dc.drawLine(0, i, _devSize, i); // horizontal line
       dc.drawLine(i, 0, i, _devSize); // vertical line
       //dc.drawCircle(_devCenter,_devCenter,i);  // x,y,r
@@ -160,6 +167,41 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
     dc.setColor(Graphics.COLOR_LT_GRAY, -1);
     dc.drawLine(0, i, _devSize, i); // horizontal line
     dc.drawLine(i, 0, i, _devSize); // vertical line
+  }
+
+  function drawTestPattern(dc, horizontal) {
+    var _colors = [
+      Graphics.COLOR_WHITE,
+      Graphics.COLOR_LT_GRAY,
+      Graphics.COLOR_DK_GRAY,
+      Graphics.COLOR_RED,
+      Graphics.COLOR_DK_RED,
+      Graphics.COLOR_ORANGE,
+      Graphics.COLOR_YELLOW,
+      Graphics.COLOR_GREEN,
+      Graphics.COLOR_DK_GREEN,
+      Graphics.COLOR_BLUE,
+      Graphics.COLOR_DK_BLUE,
+      Graphics.COLOR_PURPLE,
+      Graphics.COLOR_PINK,
+    ];
+
+    var pos = 0;
+    var gapSize = 2;
+    var colorSize = _colors.size();
+    var barSize = (_devSize - colorSize * gapSize) / colorSize;
+
+    for (var i = 0; i < colorSize; i++) {
+      dc.setColor(_colors[i], 0);
+
+      if (horizontal) {
+        dc.fillRectangle(0, pos, _devSize, barSize);
+      } else {
+        dc.fillRectangle(pos, 0, barSize, _devSize);
+      }
+
+      pos += barSize + gapSize;
+    }
   }
 
   // Called when this View is removed from the screen. Save the state of this View here.
