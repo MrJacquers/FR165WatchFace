@@ -1,3 +1,5 @@
 <fonts>
     <font id="id_monofonto_outline" filename="monofonto_outline_80_3.fnt" antialias="true" filter="0123456789:" />
+    <font id="id_monofonto_solid" filename="monofonto_solid_80.fnt" antialias="true" filter="0123456789:" />
+    <font id="id_rajdhani_bold" filename="rajdhani_bold_92.fnt" antialias="true" filter="0123456789:" />
 </fonts>

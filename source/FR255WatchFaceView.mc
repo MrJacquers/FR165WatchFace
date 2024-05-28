@@ -12,7 +12,8 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
   private var _lowPwrMode;
   private var _settings;
   private var _dataFields;
-  private var _dataFieldLayout;
+  private var _dataFieldLayout as Array;
+  private var _rowSize;
 
   function initialize() {
     //System.println("view initialize");
@@ -21,6 +22,7 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
     _settings = new Settings();
     loadSettings();
 
+    _dataFieldLayout = new [10];
     _dataFields = new DataFields();
     //_dataFields.registerComplications();
     _dataFields.battLogEnabled = _settings.battLogEnabled;
@@ -39,7 +41,8 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
     //System.println("onLayout");
     _devSize = dc.getWidth();
     _devCenter = _devSize / 2;
-    _timeFont = WatchUi.loadResource(Rez.Fonts.id_monofonto_outline);
+    _rowSize = _devSize / 8.0;
+    _timeFont = WatchUi.loadResource(Rez.Fonts.id_rajdhani_bold);
 
     // example of font height
     //var dim = dc.getTextDimensions("123", Graphics.FONT_SMALL);
@@ -47,30 +50,26 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
     //System.println(dim + " > " + h);
 
     var dataFieldFont = Graphics.FONT_SMALL;
-    var dataFontDim = dc.getTextDimensions("00", dataFieldFont);
     var timeFontDim = dc.getTextDimensions("00", _timeFont);
 
     // 260x260 devCenter=130
     // horizontal digital layout
-    var dateY = _devCenter - timeFontDim[1] / 2 - dataFontDim[1] / 2 - 10;
-    var hrY = dateY - dataFontDim[1] - 5;
-    var dataY = _devCenter + timeFontDim[1] / 2 + dataFontDim[1] / 2 + 10;
-    var battY = dataY + dataFontDim[1] + 10;
+    var hrY = _rowSize * 1;
+    var dateY = _rowSize * 2;
+    var dataY = _rowSize * 6;
+    var battY = _rowSize * 7;
     var secY = _devCenter - timeFontDim[1] / 2 - 4;
 
-    _dataFieldLayout = new [10];
     _dataFieldLayout[0] = [_settings.hrColor, _devCenter, hrY, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER];
     _dataFieldLayout[1] = [_settings.dateColor, _devCenter, dateY, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER];
-    _dataFieldLayout[2] = [_settings.connectColor, 20, _devCenter, dataFieldFont, Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER];
-    _dataFieldLayout[3] = [_settings.hourColor, _devCenter - 5, _devCenter, _timeFont, Graphics.TEXT_JUSTIFY_RIGHT | Graphics.TEXT_JUSTIFY_VCENTER];
-    _dataFieldLayout[4] = [_settings.minuteColor, _devCenter + 5, _devCenter, _timeFont, Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER];
-    _dataFieldLayout[5] = [_settings.secColor, 235, secY, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER];
-    _dataFieldLayout[6] = [_settings.bodyBattColor, _devCenter - 70, dataY, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER];
+    _dataFieldLayout[2] = [_settings.connectColor, 10, _devCenter, dataFieldFont, Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER];
+    _dataFieldLayout[3] = [_settings.hourColor, _devCenter - 2, _devCenter, _timeFont, Graphics.TEXT_JUSTIFY_RIGHT | Graphics.TEXT_JUSTIFY_VCENTER];
+    _dataFieldLayout[4] = [_settings.minuteColor, _devCenter + 2, _devCenter, _timeFont, Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER];
+    _dataFieldLayout[5] = [_settings.secColor, 244, secY, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER];
+    _dataFieldLayout[6] = [_settings.bodyBattColor, _rowSize * 2, dataY, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER];
     _dataFieldLayout[7] = [_settings.stepsColor, _devCenter, dataY, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER];
-    _dataFieldLayout[8] = [_settings.timeToRecoveryColor, _devCenter + 70, dataY, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER];
+    _dataFieldLayout[8] = [_settings.timeToRecoveryColor, _rowSize * 6, dataY, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER];
     _dataFieldLayout[9] = [_settings.battColor, _devCenter, battY, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER];
-
-    // TODO: vertical digital layout
   }
 
   // Called when this View is brought to the foreground.
@@ -130,7 +129,7 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
       drawDataField(dc, _dataFieldLayout[8], _dataFields.getTimeToRecovery());
     }
 
-    _dataFieldLayout[9][2] = _lowPwrMode ? 190 : 230;
+    _dataFieldLayout[9][2] = _lowPwrMode ? _rowSize * 6 : _rowSize * 7 + 5;
     drawDataField(dc, _dataFieldLayout[9], _dataFields.getBattery());
   }
 
@@ -153,11 +152,10 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
   // for layout position debugging
   private function drawGrid(dc as Dc) {
     var i = 0;
-    var step = 16;
 
     dc.setColor(Graphics.COLOR_DK_GRAY, -1);
     do {
-      i += step;
+      i += _rowSize;
       dc.drawLine(0, i, _devSize, i); // horizontal line
       dc.drawLine(i, 0, i, _devSize); // vertical line
       //dc.drawCircle(_devCenter,_devCenter,i);  // x,y,r
