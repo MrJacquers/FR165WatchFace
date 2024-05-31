@@ -1,16 +1,16 @@
 <properties>
     <!-- Color Codes: https://developer.garmin.com/connect-iq/api-docs/Toybox/Graphics.html -->
-    <property id="BGColor" type="string">000000</property>
-    <property id="DateColor" type="string">FFFFFF</property>
-    <property id="HRColor" type="string">FF5500</property>
-    <property id="ConnectColor" type="string">00AAFF</property>
-    <property id="HourColor" type="string">FFFFFF</property>
-    <property id="MinuteColor" type="string">FFFF00</property>
-    <property id="SecColor" type="string">FF5500</property>
-    <property id="BodyBattColor" type="string">FFFFFF</property>
-    <property id="StressColor" type="string">FFFFFF</property>
-    <property id="StepsColor" type="string">FFFFFF</property>
-    <property id="TimeToRecoveryColor" type="string">FFFFFF</property>
-    <property id="BattColor" type="string">FFFFFF</property>
+    <property id="BGColor" type="number">0x000000</property>
+    <property id="DateColor" type="number">0xFFFFFF</property>
+    <property id="HRColor" type="number">0xFF5500</property>
+    <property id="ConnectColor" type="number">0x00AAFF</property>
+    <property id="HourColor" type="number">0xFFFFFF</property>
+    <property id="MinuteColor" type="number">0x00FF00</property>
+    <property id="SecColor" type="number">0xFF5500</property>
+    <property id="BodyBattColor" type="number">0xFFFFFF</property>
+    <property id="StressColor" type="number">0xFFFFFF</property>
+    <property id="StepsColor" type="number">0xFFFFFF</property>
+    <property id="TimeToRecoveryColor" type="number">0xFFFFFF</property>
+    <property id="BattColor" type="number">0xFFFFFF</property>
     <property id="ColorTest" type="boolean">false</property>
 </properties>

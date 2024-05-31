@@ -24,18 +24,18 @@ class Settings {
         // Set via ConnectIQ App.
         // https://developer.garmin.com/connect-iq/core-topics/properties-and-app-settings/
         if (Toybox.Application has :Properties) {
-            bgColor = Application.Properties.getValue("BGColor").toNumberWithBase(16);
-            dateColor = Application.Properties.getValue("DateColor").toNumberWithBase(16);
-            hrColor = Application.Properties.getValue("HRColor").toNumberWithBase(16);
-            connectColor = Application.Properties.getValue("ConnectColor").toNumberWithBase(16);            
-            hourColor = Application.Properties.getValue("HourColor").toNumberWithBase(16);
-            minuteColor = Application.Properties.getValue("MinuteColor").toNumberWithBase(16);
-            secColor = Application.Properties.getValue("SecColor").toNumberWithBase(16);
-            bodyBattColor = Application.Properties.getValue("BodyBattColor").toNumberWithBase(16);
-            stressColor = Application.Properties.getValue("StressColor").toNumberWithBase(16);
-            stepsColor = Application.Properties.getValue("StepsColor").toNumberWithBase(16);
-            timeToRecoveryColor = Application.Properties.getValue("TimeToRecoveryColor").toNumberWithBase(16);
-            battColor = Application.Properties.getValue("BattColor").toNumberWithBase(16);
+            bgColor = Application.Properties.getValue("BGColor");
+            dateColor = Application.Properties.getValue("DateColor");
+            hrColor = Application.Properties.getValue("HRColor");
+            connectColor = Application.Properties.getValue("ConnectColor");            
+            hourColor = Application.Properties.getValue("HourColor");
+            minuteColor = Application.Properties.getValue("MinuteColor");
+            secColor = Application.Properties.getValue("SecColor");
+            bodyBattColor = Application.Properties.getValue("BodyBattColor");
+            stressColor = Application.Properties.getValue("StressColor");
+            stepsColor = Application.Properties.getValue("StepsColor");
+            timeToRecoveryColor = Application.Properties.getValue("TimeToRecoveryColor");
+            battColor = Application.Properties.getValue("BattColor");
             colorTest = Application.Properties.getValue("ColorTest");
         }
 

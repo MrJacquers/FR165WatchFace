@@ -42,7 +42,7 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
     _devSize = dc.getWidth();
     _devCenter = _devSize / 2;
     _rowSize = _devSize / 8.0;
-    _timeFont = WatchUi.loadResource(Rez.Fonts.id_rajdhani_bold);
+    _timeFont = WatchUi.loadResource(Rez.Fonts.id_rajdhani_bold_mono);
 
     // example of font height
     //var dim = dc.getTextDimensions("123", Graphics.FONT_SMALL);
@@ -62,10 +62,10 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
 
     _dataFieldLayout[0] = [_settings.hrColor, _devCenter, hrY, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER];
     _dataFieldLayout[1] = [_settings.dateColor, _devCenter, dateY, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER];
-    _dataFieldLayout[2] = [_settings.connectColor, 10, _devCenter, dataFieldFont, Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER];
-    _dataFieldLayout[3] = [_settings.hourColor, _devCenter - 2, _devCenter, _timeFont, Graphics.TEXT_JUSTIFY_RIGHT | Graphics.TEXT_JUSTIFY_VCENTER];
-    _dataFieldLayout[4] = [_settings.minuteColor, _devCenter + 2, _devCenter, _timeFont, Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER];
-    _dataFieldLayout[5] = [_settings.secColor, 244, secY, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER];
+    _dataFieldLayout[2] = [_settings.connectColor, 14, _devCenter, dataFieldFont, Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER];
+    _dataFieldLayout[3] = [_settings.hourColor, _devCenter - 1, _devCenter, _timeFont, Graphics.TEXT_JUSTIFY_RIGHT | Graphics.TEXT_JUSTIFY_VCENTER];
+    _dataFieldLayout[4] = [_settings.minuteColor, _devCenter + 1, _devCenter, _timeFont, Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER];
+    _dataFieldLayout[5] = [_settings.secColor, 240, secY, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER];
     _dataFieldLayout[6] = [_settings.bodyBattColor, _rowSize * 2, dataY, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER];
     _dataFieldLayout[7] = [_settings.stepsColor, _devCenter, dataY, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER];
     _dataFieldLayout[8] = [_settings.timeToRecoveryColor, _rowSize * 6, dataY, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER];
@@ -215,7 +215,7 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
     //System.println("onEnterSleep");
     _lowPwrMode = true;
     //_dataFields.unsubscribeStress();
-    //WatchUi.requestUpdate(); // not really required, onUpdate will be called anyway.
+    WatchUi.requestUpdate(); // not really required, onUpdate will be called anyway.
   }
 
   // The user has just looked at their watch. Timers and animations may be started here.
@@ -223,6 +223,6 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
     //System.println("onExitSleep");
     _lowPwrMode = false;
     //_dataFields.subscribeStress();
-    //WatchUi.requestUpdate(); // not really required, onUpdate will be called anyway.
+    WatchUi.requestUpdate(); // not really required, onUpdate will be called anyway.
   }
 }
