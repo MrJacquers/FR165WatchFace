@@ -60,16 +60,16 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
     var battY = _rowSize * 7;
     var secY = _devCenter - timeFontDim[1] / 2 - 4;
 
-    _dataFieldLayout[0] = [_settings.hrColor, _devCenter, hrY, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER];
-    _dataFieldLayout[1] = [_settings.dateColor, _devCenter, dateY, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER];
-    _dataFieldLayout[2] = [_settings.connectColor, 14, _devCenter, dataFieldFont, Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER];
-    _dataFieldLayout[3] = [_settings.hourColor, _devCenter - 1, _devCenter, _timeFont, Graphics.TEXT_JUSTIFY_RIGHT | Graphics.TEXT_JUSTIFY_VCENTER];
-    _dataFieldLayout[4] = [_settings.minuteColor, _devCenter + 1, _devCenter, _timeFont, Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER];
-    _dataFieldLayout[5] = [_settings.secColor, 240, secY, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER];
-    _dataFieldLayout[6] = [_settings.bodyBattColor, _rowSize * 2, dataY, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER];
-    _dataFieldLayout[7] = [_settings.stepsColor, _devCenter, dataY, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER];
-    _dataFieldLayout[8] = [_settings.timeToRecoveryColor, _rowSize * 6, dataY, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER];
-    _dataFieldLayout[9] = [_settings.battColor, _devCenter, battY, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER];
+    _dataFieldLayout[0] = [_devCenter, hrY, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER]; // heart rate
+    _dataFieldLayout[1] = [_devCenter, dateY, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER]; // date
+    _dataFieldLayout[2] = [14, _devCenter, dataFieldFont, Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER]; // connection status
+    _dataFieldLayout[3] = [_devCenter - 1, _devCenter, _timeFont, Graphics.TEXT_JUSTIFY_RIGHT | Graphics.TEXT_JUSTIFY_VCENTER]; // hour
+    _dataFieldLayout[4] = [_devCenter + 1, _devCenter, _timeFont, Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER]; // minute
+    _dataFieldLayout[5] = [240, secY, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER]; // seconds
+    _dataFieldLayout[6] = [_rowSize * 2, dataY, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER]; // body battery
+    _dataFieldLayout[7] = [_devCenter, dataY, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER]; // steps
+    _dataFieldLayout[8] = [_rowSize * 6, dataY, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER]; // time to recovery
+    _dataFieldLayout[9] = [_devCenter, battY, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER]; // battery
   }
 
   // Called when this View is brought to the foreground.
@@ -113,24 +113,24 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
     // Get the date info, the strings will be localized.
     var dateInfo = Gregorian.info(Time.now(), Time.FORMAT_MEDIUM);
 
-    drawDataField(dc, _dataFieldLayout[1], _dataFields.getDate(dateInfo));
-    drawDataField(dc, _dataFieldLayout[3], dateInfo.hour.format("%02d"));
-    drawDataField(dc, _dataFieldLayout[4], dateInfo.min.format("%02d"));
+    drawDataField(dc, _dataFields.getDate(dateInfo), _dataFieldLayout[1], _settings.dateColor);
+    drawDataField(dc, dateInfo.hour.format("%02d"), _dataFieldLayout[3], _settings.hourColor);
+    drawDataField(dc, dateInfo.min.format("%02d"), _dataFieldLayout[4], _settings.minuteColor);
 
     if (System.getDeviceSettings().phoneConnected) {
-      drawDataField(dc, _dataFieldLayout[2], "B");
+      drawDataField(dc, "B", _dataFieldLayout[2], _settings.connectColor);
     }
 
     if (!_lowPwrMode) {
-      drawDataField(dc, _dataFieldLayout[0], _dataFields.getHeartRate());
-      drawDataField(dc, _dataFieldLayout[5], dateInfo.sec.format("%02d"));
-      drawDataField(dc, _dataFieldLayout[6], _dataFields.getBodyBattery());
-      drawDataField(dc, _dataFieldLayout[7], _dataFields.getSteps());
-      drawDataField(dc, _dataFieldLayout[8], _dataFields.getTimeToRecovery());
+      drawDataField(dc, _dataFields.getHeartRate(), _dataFieldLayout[0], _settings.hrColor);
+      drawDataField(dc, dateInfo.sec.format("%02d"), _dataFieldLayout[5], _settings.secColor);
+      drawDataField(dc, _dataFields.getBodyBattery(), _dataFieldLayout[6], _settings.bodyBattColor);
+      drawDataField(dc, _dataFields.getSteps(), _dataFieldLayout[7], _settings.stepsColor);
+      drawDataField(dc, _dataFields.getTimeToRecovery(), _dataFieldLayout[8], _settings.timeToRecoveryColor);
     }
 
-    _dataFieldLayout[9][2] = _lowPwrMode ? _rowSize * 6 : _rowSize * 7 + 5;
-    drawDataField(dc, _dataFieldLayout[9], _dataFields.getBattery());
+    _dataFieldLayout[9][1] = _lowPwrMode ? _rowSize * 6 : _rowSize * 7 + 5;
+    drawDataField(dc, _dataFields.getBattery(), _dataFieldLayout[9], _settings.battColor);
   }
 
   (:debug)
@@ -144,9 +144,9 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
     // no need for this on actual device.
   }
 
-  function drawDataField(dc, info as Array, text) {
-    dc.setColor(info[0], _settings.bgColor);
-    dc.drawText(info[1], info[2], info[3], text, info[4]);
+  function drawDataField(dc as Dc, text as String, info as Array, color as Number) {
+    dc.setColor(color, _settings.bgColor);
+    dc.drawText(info[0], info[1], info[2], text, info[3]);
   }
 
   // for layout position debugging
