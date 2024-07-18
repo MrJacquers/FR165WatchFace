@@ -58,14 +58,15 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
     var dateY = _rowSize * 2;
     var dataY = _rowSize * 6;
     var battY = _rowSize * 7;
-    var secY = _devCenter - timeFontDim[1] / 2 - 4;
+    var secX = _devSize - (_devSize < 220 ? 16 : 20);
+    var secY = _devCenter - (timeFontDim[1] / 2) - 4;
 
     _dataFieldLayout[0] = [_devCenter, hrY, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER]; // heart rate
     _dataFieldLayout[1] = [_devCenter, dateY, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER]; // date
     _dataFieldLayout[2] = [14, _devCenter, dataFieldFont, Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER]; // connection status
     _dataFieldLayout[3] = [_devCenter - 1, _devCenter, _timeFont, Graphics.TEXT_JUSTIFY_RIGHT | Graphics.TEXT_JUSTIFY_VCENTER]; // hour
     _dataFieldLayout[4] = [_devCenter + 1, _devCenter, _timeFont, Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER]; // minute
-    _dataFieldLayout[5] = [240, secY, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER]; // seconds
+    _dataFieldLayout[5] = [secX, secY, Graphics.FONT_SYSTEM_TINY, Graphics.TEXT_JUSTIFY_CENTER]; // seconds
     _dataFieldLayout[6] = [_rowSize * 2, dataY, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER]; // body battery
     _dataFieldLayout[7] = [_devCenter, dataY, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER]; // steps
     _dataFieldLayout[8] = [_rowSize * 6, dataY, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER]; // time to recovery
