@@ -2,6 +2,7 @@ import Toybox.Lang;
 import Toybox.Application.Storage;
 
 class Settings {
+    var layoutType;
     var bgColor;
     var dateColor;
     var hrColor;
@@ -24,6 +25,7 @@ class Settings {
         // Set via ConnectIQ App.
         // https://developer.garmin.com/connect-iq/core-topics/properties-and-app-settings/
         if (Toybox.Application has :Properties) {
+            layoutType = Application.Properties.getValue("LayoutType");
             bgColor = Application.Properties.getValue("BGColor");
             dateColor = Application.Properties.getValue("DateColor");
             hrColor = Application.Properties.getValue("HRColor");

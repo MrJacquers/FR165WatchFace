@@ -1,5 +1,8 @@
 <strings>
     <string id="AppName">WatchFace for FR255</string>
+    <string id="LayoutTypeTitle">Layout Type</string>
+    <string id="LayoutTypeHorizontal">Horizontal</string>
+    <string id="LayoutTypeVertical">Vertical</string>
     <string id="BGColorTitle">Background Color</string>
     <string id="DateColorTitle">Date Color</string>
     <string id="HRColorTitle">Heart Rate Color</string>

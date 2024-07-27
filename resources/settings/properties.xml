@@ -1,5 +1,6 @@
 <properties>
     <!-- Color Codes: https://developer.garmin.com/connect-iq/api-docs/Toybox/Graphics.html -->
+    <property id="LayoutType" type="number">0</property>
     <property id="BGColor" type="number">0x000000</property>
     <property id="DateColor" type="number">0xFFFFFF</property>
     <property id="HRColor" type="number">0xFF5500</property>
