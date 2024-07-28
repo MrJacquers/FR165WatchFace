@@ -58,15 +58,12 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
 
     if (_settings.layoutType == 0) {
       // horizontal layout
-      var hrY = _rowSize;
-      var dateY = _rowSize * 2;
       var dataY = _rowSize * 6;
-      var battY = _rowSize * 7 + 5;
       var secX = _devSize - (_devSize < 220 ? 16 : 20);
       var secY = _devCenter - (timeFontDim[1] / 2) - 4;
 
-      _dataFieldLayout[0] = [_devCenter, hrY, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER]; // heart rate
-      _dataFieldLayout[1] = [_devCenter, dateY, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER]; // date
+      _dataFieldLayout[0] = [_devCenter, _rowSize, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER]; // heart rate
+      _dataFieldLayout[1] = [_devCenter, _rowSize * 2, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER]; // date
       _dataFieldLayout[2] = [14, _devCenter, dataFieldFont, Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER]; // connection status
       _dataFieldLayout[3] = [_devCenter - 1, _devCenter, _timeFont, Graphics.TEXT_JUSTIFY_RIGHT | Graphics.TEXT_JUSTIFY_VCENTER]; // hour
       _dataFieldLayout[4] = [_devCenter + 1, _devCenter, _timeFont, Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER]; // minute
@@ -74,26 +71,35 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
       _dataFieldLayout[6] = [_rowSize * 2, dataY, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER]; // body battery
       _dataFieldLayout[7] = [_devCenter, dataY, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER]; // steps
       _dataFieldLayout[8] = [_rowSize * 6, dataY, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER]; // time to recovery
-      _dataFieldLayout[9] = [_devCenter, battY, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER]; // battery
-    } else {
+      _dataFieldLayout[9] = [_devCenter, _rowSize * 7 + 5, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER]; // battery
+    } 
+    
+    if (_settings.layoutType == 1) {
       // vertical layout
-      var hrY = _rowSize * 2.5;
-      var hrX = _colSize * 6.5;
-      var dateY = _rowSize;
-      var secX = _colSize * 6.5;
-      var secY = _devCenter;
-      var battY = _rowSize * 7;
-
-      _dataFieldLayout[0] = [hrX, hrY, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER]; // heart rate
-      _dataFieldLayout[1] = [_devCenter, dateY, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER]; // date
-      _dataFieldLayout[2] = [_colSize * 1.5, _devCenter, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER]; // connection status
+      _dataFieldLayout[0] = [_colSize * 6.5, _devCenter, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER]; // heart rate
+      _dataFieldLayout[1] = [_devCenter, _rowSize, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER]; // date
+      _dataFieldLayout[2] = [_colSize * 1.5, _rowSize * 2.5, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER]; // connection status
       _dataFieldLayout[3] = [_devCenter, _devCenter - timeFontDim[1] - 3, _timeFont, Graphics.TEXT_JUSTIFY_CENTER]; // hour
       _dataFieldLayout[4] = [_devCenter, _devCenter + 2, _timeFont, Graphics.TEXT_JUSTIFY_CENTER]; // minute
-      _dataFieldLayout[5] = [secX, secY, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER]; // seconds
+      _dataFieldLayout[5] = [_colSize * 6.5, _rowSize * 2.5, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER]; // seconds
       _dataFieldLayout[6] = [_colSize * 1.5, _rowSize * 5.5, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER]; // body battery
-      _dataFieldLayout[7] = [_colSize * 1.5, hrY, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER]; // steps
+      _dataFieldLayout[7] = [_colSize * 1.5, _devCenter, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER]; // steps
       _dataFieldLayout[8] = [_colSize * 6.5, _rowSize * 5.5, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER]; // time to recovery
-      _dataFieldLayout[9] = [_devCenter, battY, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER]; // battery
+      _dataFieldLayout[9] = [_devCenter, _rowSize * 7, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER]; // battery
+    }
+
+    if (_settings.layoutType == 2) {
+      // vertical layout z pattern
+      _dataFieldLayout[0] = [_colSize * 6.5, _rowSize * 3, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER]; // heart rate
+      _dataFieldLayout[1] = [_devCenter, _rowSize, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER]; // date
+      _dataFieldLayout[2] = [_colSize * 0.75, _rowSize * 3, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER]; // connection status
+      _dataFieldLayout[3] = [_devCenter, _devCenter - timeFontDim[1] - 3, _timeFont, Graphics.TEXT_JUSTIFY_RIGHT]; // hour
+      _dataFieldLayout[4] = [_devCenter, _devCenter + 2, _timeFont, Graphics.TEXT_JUSTIFY_LEFT]; // minute
+      _dataFieldLayout[5] = [_colSize * 5, _rowSize * 3, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER]; // seconds
+      _dataFieldLayout[6] = [_colSize * 1.75, _rowSize * 5.5, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER]; // body battery
+      _dataFieldLayout[7] = [_colSize * 2.5, _rowSize * 4.5, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER]; // steps
+      _dataFieldLayout[8] = [_colSize * 3.25, _rowSize * 5.5, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER]; // time to recovery
+      _dataFieldLayout[9] = [_devCenter, _rowSize * 7, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER]; // battery
     }
   }
 
