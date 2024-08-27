@@ -4,7 +4,6 @@
         <settingConfig type="list">
             <listEntry value="0">@Strings.LayoutTypeHorizontal</listEntry>
             <listEntry value="1">@Strings.LayoutTypeVertical</listEntry>
-            <listEntry value="2">@Strings.LayoutTypeVerticalZ</listEntry>
         </settingConfig>
     </setting>
     <setting propertyKey="@Properties.BGColor" title="@Strings.BGColorTitle">
