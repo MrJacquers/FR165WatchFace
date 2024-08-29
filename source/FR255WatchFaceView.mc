@@ -15,6 +15,7 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
   private var _dataFieldLayout as Array;
   private var _rowSize;
   private var _colSize;
+  private var _canBurnIn = false;
 
   function initialize() {
     //System.println("view initialize");
@@ -31,6 +32,12 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
     /*if (Toybox.WatchUi.WatchFace has :onPartialUpdate) {
       System.println("onPartialUpdate available");
     }*/
+
+    var deviceSettings = System.getDeviceSettings();
+    if(deviceSettings has :requiresBurnInProtection) {
+      _canBurnIn = deviceSettings.requiresBurnInProtection;
+      System.println("Can Burn In" + _canBurnIn);
+    }
   }
 
   function loadSettings() {
@@ -105,26 +112,28 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
   // Called once a minute in low power mode.
   function onUpdate(dc as Dc) as Void {
     //System.print("onUpdate: ");
+    clearScreen(dc);
 
     if (_hidden) {
       //System.println("hidden");
       return;
     }
 
-    if (_lowPwrMode) {
+    if (_lowPwrMode && _canBurnIn) {
       //System.println("low power mode");
-      if (_settings.colorTest) {
-        drawColorPattern(dc, true);
-      }
+      return;
+    }
+
+    if (_settings.colorTest) {
+      drawColorPattern(dc, true);
       return;
     }
 
     //System.println("drawing");
-    clearScreen(dc);
 
     // lines for positioning
     //if (_settings.showGrid) {
-    drawGrid(dc);
+    //drawGrid(dc);
     //}
 
     // Get the date info, the strings will be localized.
@@ -232,12 +241,12 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
     _lowPwrMode = true;
     //_dataFields.unsubscribeStress();
 
-    if (_settings.layoutType == 0) {
+    if (_settings.layoutType == 0 && !_canBurnIn) {
       // battery y pos for horizontal
       _dataFieldLayout[9][1] = _rowSize * 6;
     }
 
-    WatchUi.requestUpdate(); // not really required, onUpdate will be called anyway.
+    //WatchUi.requestUpdate(); // not really required, onUpdate will be called anyway.
   }
 
   // The user has just looked at their watch. Timers and animations may be started here.
@@ -246,11 +255,11 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
     _lowPwrMode = false;
     //_dataFields.subscribeStress();
 
-    if (_settings.layoutType == 0) {
+    if (_settings.layoutType == 0 && !_canBurnIn) {
       // battery y pos for horizontal
       _dataFieldLayout[9][1] = _rowSize * 7 + 5;
-    }    
+    }
 
-    WatchUi.requestUpdate(); // not really required, onUpdate will be called anyway.
+    //WatchUi.requestUpdate(); // not really required, onUpdate will be called anyway.
   }
 }
