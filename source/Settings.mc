@@ -4,6 +4,8 @@ import Toybox.Application.Storage;
 class Settings {
     var layoutType;
     var bgColor;
+    var textColor;
+    var timeFont;
     var dateColor;
     var hrColor;
     var connectColor;
@@ -27,6 +29,8 @@ class Settings {
         if (Toybox.Application has :Properties) {
             layoutType = Application.Properties.getValue("LayoutType");
             bgColor = Application.Properties.getValue("BGColor");
+            textColor = Application.Properties.getValue("TextColor");
+            timeFont = Application.Properties.getValue("TimeFont");
             dateColor = Application.Properties.getValue("DateColor");
             hrColor = Application.Properties.getValue("HRColor");
             connectColor = Application.Properties.getValue("ConnectColor");            

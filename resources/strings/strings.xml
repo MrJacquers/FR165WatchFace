@@ -4,6 +4,10 @@
     <string id="LayoutTypeHorizontal">Horizontal</string>
     <string id="LayoutTypeVertical">Vertical</string>
     <string id="BGColorTitle">Background Color</string>
+    <string id="TextColorTitle">Text Color</string>
+    <string id="TimeFontTitle">Time Font</string>
+    <string id="TimeFontRajdhani">Rajdhani</string>
+    <string id="TimeFontMonofonto">Monofonto</string>
     <string id="DateColorTitle">Date Color</string>
     <string id="HRColorTitle">Heart Rate Color</string>
     <string id="ConnectColorTitle">Connection  Color</string>

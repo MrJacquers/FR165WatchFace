@@ -24,6 +24,15 @@
             <listEntry value="0xFF00FF">@Strings.ColorPink</listEntry>
         </settingConfig>
     </setting>
+    <setting propertyKey="@Properties.TextColor" title="@Strings.TextColorTitle">
+        <settingConfig type="numeric" />
+    </setting>
+    <setting propertyKey="@Properties.TimeFont" title="@Strings.TimeFontTitle">
+        <settingConfig type="list">
+            <listEntry value="0">@Strings.TimeFontRajdhani</listEntry>
+            <listEntry value="1">@Strings.TimeFontMonofonto</listEntry>
+        </settingConfig>
+    </setting>
     <setting propertyKey="@Properties.DateColor" title="@Strings.DateColorTitle">
         <settingConfig type="list">
             <listEntry value="0xFFFFFF">@Strings.ColorWhite</listEntry>

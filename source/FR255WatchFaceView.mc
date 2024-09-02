@@ -34,7 +34,7 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
     }*/
 
     var deviceSettings = System.getDeviceSettings();
-    if(deviceSettings has :requiresBurnInProtection) {
+    if (deviceSettings has :requiresBurnInProtection) {
       _canBurnIn = deviceSettings.requiresBurnInProtection;
       System.println("Can Burn In" + _canBurnIn);
     }
@@ -53,7 +53,12 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
     _devCenter = _devSize / 2;
     _rowSize = _devSize / 8.0;
     _colSize = _devSize / 8.0;
-    _timeFont = WatchUi.loadResource(Rez.Fonts.id_rajdhani_bold_mono);
+
+    if (_settings.timeFont == 0) {
+      _timeFont = WatchUi.loadResource(Rez.Fonts.id_rajdhani_bold_mono);
+    } else {
+      _timeFont = WatchUi.loadResource(Rez.Fonts.id_monofonto_bold_mono);
+    }
 
     // example of font height
     //var dim = dc.getTextDimensions("123", Graphics.FONT_SMALL);
@@ -170,7 +175,7 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
   }
 
   function drawDataField(dc as Dc, text as String, info as Array, color as Number) {
-    dc.setColor(color, _settings.bgColor);
+    dc.setColor(_settings.textColor, _settings.bgColor);
     dc.drawText(info[0], info[1], info[2], text, info[3]);
   }
 
