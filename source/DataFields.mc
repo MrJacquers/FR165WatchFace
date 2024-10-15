@@ -78,7 +78,12 @@ class DataFields {
     }
 
     function getTimeToRecovery() {
-        return ActivityMonitor.getInfo().timeToRecovery;
+        //return ActivityMonitor.getInfo().timeToRecovery;
+        var comp = Complications.getComplication(new Complications.Id(Complications.COMPLICATION_TYPE_RECOVERY_TIME));
+        if (comp.value != null) {
+            return (comp.value / 60).toNumber();
+        }
+        return "--";
     }
 
     function getBattery() {
@@ -89,7 +94,7 @@ class DataFields {
             var time = System.getClockTime();
             System.println(Lang.format("Battery,$1$:$2$:$3$,$4$", [time.hour.format("%02d"), time.min.format("%02d"), time.sec.format("%02d"), battery]));
         }
-        return Lang.format("$1$%", [battery.format("%d")]);
         //return battery.format("%.2f") + "%";
+        return Lang.format("$1$%", [battery.format("%d")]);
     }
 }

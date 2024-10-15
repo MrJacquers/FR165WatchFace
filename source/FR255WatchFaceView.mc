@@ -36,7 +36,6 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
     var deviceSettings = System.getDeviceSettings();
     if (deviceSettings has :requiresBurnInProtection) {
       _canBurnIn = deviceSettings.requiresBurnInProtection;
-      System.println("Can Burn In" + _canBurnIn);
     }
   }
 
@@ -84,7 +83,7 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
       _dataFieldLayout[7] = [_devCenter, dataY, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER]; // steps
       _dataFieldLayout[8] = [_rowSize * 6, dataY, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER]; // time to recovery
       _dataFieldLayout[9] = [_devCenter, _rowSize * 7 + 5, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER]; // battery
-    } 
+    }
     
     if (_settings.layoutType == 1) {
       // vertical layout
@@ -121,11 +120,17 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
 
     if (_hidden) {
       //System.println("hidden");
+      if (_settings.battLogEnabled) {
+        _dataFields.getBattery();
+      }
       return;
     }
 
     if (_lowPwrMode && _canBurnIn) {
       //System.println("low power mode");
+      if (_settings.battLogEnabled) {
+        _dataFields.getBattery();
+      }
       return;
     }
 
