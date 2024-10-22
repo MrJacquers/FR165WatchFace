@@ -15,5 +15,4 @@
     <property id="StepsColor" type="number">0xAAAAAA</property>
     <property id="TimeToRecoveryColor" type="number">0xAAAAAA</property>
     <property id="BattColor" type="number">0xAAAAAA</property>
-    <property id="ColorTest" type="boolean">false</property>
 </properties>

@@ -12,10 +12,8 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
   private var _lowPwrMode;
   private var _settings;
   private var _dataFields;
-  private var _dataFieldLayout as Array;
   private var _rowSize;
-  private var _colSize;
-  private var _canBurnIn = false;
+  private var _canBurnIn;
 
   function initialize() {
     //System.println("view initialize");
@@ -23,15 +21,10 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
 
     _settings = new Settings();
     loadSettings();
-
-    _dataFieldLayout = new [10];
+    
     _dataFields = new DataFields();
     //_dataFields.registerComplications();
     _dataFields.battLogEnabled = _settings.battLogEnabled;
-
-    /*if (Toybox.WatchUi.WatchFace has :onPartialUpdate) {
-      System.println("onPartialUpdate available");
-    }*/
 
     var deviceSettings = System.getDeviceSettings();
     if (deviceSettings has :requiresBurnInProtection) {
@@ -46,57 +39,15 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
   // Load your resources here
   function onLayout(dc as Dc) as Void {
     //System.println("onLayout");
-    // FR255 260x260 devCenter=130
-    // FR255 218x218 devCenter=109
+
     _devSize = dc.getWidth();
     _devCenter = _devSize / 2;
-    _rowSize = _devSize / 8.0;
-    _colSize = _devSize / 8.0;
+    _rowSize = _devSize / 20.0;
 
     if (_settings.timeFont == 0) {
       _timeFont = WatchUi.loadResource(Rez.Fonts.id_rajdhani_bold_mono);
     } else {
       _timeFont = WatchUi.loadResource(Rez.Fonts.id_monofonto_bold_mono);
-    }
-
-    // example of font height
-    //var dim = dc.getTextDimensions("123", Graphics.FONT_SMALL);
-    //var h = dc.getFontHeight(Graphics.FONT_SMALL);
-    //System.println(dim + " > " + h);
-
-    var dataFieldFont = Graphics.FONT_SMALL;
-    var timeFontDim = dc.getTextDimensions("00", _timeFont);
-
-    if (_settings.layoutType == 0) {
-      // horizontal layout
-      var dataY = _rowSize * 6;
-      var secX = _devSize - (_devSize < 220 ? 16 : 32);
-      var secY = _devCenter - (timeFontDim[1] / 2) - 4;
-
-      _dataFieldLayout[0] = [_devCenter, _rowSize, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER]; // heart rate
-      _dataFieldLayout[1] = [_devCenter, _rowSize * 2, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER]; // date
-      _dataFieldLayout[2] = [24, _devCenter, dataFieldFont, Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER]; // connection status
-      _dataFieldLayout[3] = [_devCenter - 2, _devCenter, _timeFont, Graphics.TEXT_JUSTIFY_RIGHT | Graphics.TEXT_JUSTIFY_VCENTER]; // hour
-      _dataFieldLayout[4] = [_devCenter + 2, _devCenter, _timeFont, Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER]; // minute
-      _dataFieldLayout[5] = [secX, secY, Graphics.FONT_SYSTEM_TINY, Graphics.TEXT_JUSTIFY_CENTER]; // seconds
-      _dataFieldLayout[6] = [_rowSize * 2, dataY, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER]; // body battery
-      _dataFieldLayout[7] = [_devCenter, dataY, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER]; // steps
-      _dataFieldLayout[8] = [_rowSize * 6, dataY, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER]; // time to recovery
-      _dataFieldLayout[9] = [_devCenter, _rowSize * 7 + 5, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER]; // battery
-    }
-    
-    if (_settings.layoutType == 1) {
-      // vertical layout
-      _dataFieldLayout[0] = [_colSize * 6.5, _devCenter, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER]; // heart rate
-      _dataFieldLayout[1] = [_devCenter, _rowSize, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER]; // date
-      _dataFieldLayout[2] = [_colSize * 1.5, _rowSize * 2.5, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER]; // connection status
-      _dataFieldLayout[3] = [_devCenter, _devCenter - timeFontDim[1] - 3, _timeFont, Graphics.TEXT_JUSTIFY_CENTER]; // hour
-      _dataFieldLayout[4] = [_devCenter, _devCenter + 2, _timeFont, Graphics.TEXT_JUSTIFY_CENTER]; // minute
-      _dataFieldLayout[5] = [_colSize * 6.5, _rowSize * 2.5, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER]; // seconds
-      _dataFieldLayout[6] = [_colSize * 1.5, _rowSize * 5.5, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER]; // body battery
-      _dataFieldLayout[7] = [_colSize * 1.5, _devCenter, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER]; // steps
-      _dataFieldLayout[8] = [_colSize * 6.5, _rowSize * 5.5, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER]; // time to recovery
-      _dataFieldLayout[9] = [_devCenter, _rowSize * 7, dataFieldFont, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER]; // battery
     }
   }
 
@@ -108,64 +59,81 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
     //_settings.loadSettings();
     _hidden = false;
     _lowPwrMode = false;
-    //_dataFields.subscribeStress();
+    //_dataFields.subscribeToComplications();
   }
 
-  // Updates the View.
-  // Called every second in high power mode, e.g. after a gesture, for +- 5 seconds.
+  // Updates the View:
   // Called once a minute in low power mode.
+  // Called every second in high power mode, e.g. after a gesture, for a couple of seconds.
   function onUpdate(dc as Dc) as Void {
     //System.print("onUpdate: ");
     clearScreen(dc);
 
     if (_hidden) {
       //System.println("hidden");
-      if (_settings.battLogEnabled) {
-        _dataFields.getBattery();
-      }
+      //if (_settings.battLogEnabled) {
+      //  _dataFields.getBattery();
+      //}
       return;
     }
 
     if (_lowPwrMode && _canBurnIn) {
       //System.println("low power mode");
-      if (_settings.battLogEnabled) {
-        _dataFields.getBattery();
-      }
+      //if (_settings.battLogEnabled) {
+      //  _dataFields.getBattery();
+      //}
       return;
     }
-
-    if (_settings.colorTest) {
-      drawColorPattern(dc, true);
-      return;
-    }
-
-    //System.println("drawing");
 
     // lines for positioning
     //if (_settings.showGrid) {
     //drawGrid(dc);
     //}
 
+    //System.println("drawing");
+
     // Get the date info, the strings will be localized.
     var dateInfo = Gregorian.info(Time.now(), Time.FORMAT_MEDIUM);
+    
+    dc.setColor(_settings.textColor, _settings.bgColor);
 
-    drawDataField(dc, _dataFields.getDate(dateInfo), _dataFieldLayout[1], _settings.dateColor);
-    drawDataField(dc, dateInfo.hour.format("%02d"), _dataFieldLayout[3], _settings.hourColor);
-    drawDataField(dc, dateInfo.min.format("%02d"), _dataFieldLayout[4], _settings.minuteColor);
+    // altitude
+    dc.drawText(_devCenter, 25, Graphics.FONT_TINY, _dataFields.getAltitude(), Graphics.TEXT_JUSTIFY_CENTER);
+    //dc.drawRectangle(185, 30, 35, 35);
 
+    // hour
+    dc.drawText(_devCenter, 77, _timeFont, dateInfo.hour.format("%02d"), Graphics.TEXT_JUSTIFY_CENTER);
+
+    // minute
+    dc.drawText(_devCenter, 233, _timeFont, dateInfo.min.format("%02d"), Graphics.TEXT_JUSTIFY_CENTER);
+
+    // phone connected
     if (System.getDeviceSettings().phoneConnected) {
-      drawDataField(dc, "B", _dataFieldLayout[2], _settings.connectColor);
+      dc.drawText(70, _devCenter, Graphics.FONT_TINY, "B", Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
     }
 
-    if (!_lowPwrMode) {
-      drawDataField(dc, _dataFields.getHeartRate(), _dataFieldLayout[0], _settings.hrColor);
-      drawDataField(dc, dateInfo.sec.format("%02d"), _dataFieldLayout[5], _settings.secColor);
-      drawDataField(dc, _dataFields.getBodyBattery(), _dataFieldLayout[6], _settings.bodyBattColor);
-      drawDataField(dc, _dataFields.getSteps(), _dataFieldLayout[7], _settings.stepsColor);
-      drawDataField(dc, _dataFields.getTimeToRecovery(), _dataFieldLayout[8], _settings.timeToRecoveryColor);
-    }
+    // date
+    dc.drawText(_devCenter, _devCenter, Graphics.FONT_TINY, _dataFields.getDate(dateInfo), Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
 
-    drawDataField(dc, _dataFields.getBattery(), _dataFieldLayout[9], _settings.battColor);
+    // seconds
+    dc.drawText(320, _devCenter, Graphics.FONT_TINY, dateInfo.sec.format("%02d"), Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+
+    // recovery time
+    dc.drawText(70, 100, Graphics.FONT_TINY, _dataFields.getRecoveryTime(), Graphics.TEXT_JUSTIFY_CENTER);
+    //dc.drawRectangle(50, 100, 35, 35);
+
+    // body battery
+    dc.drawText(70, 260, Graphics.FONT_TINY, _dataFields.getBodyBattery(), Graphics.TEXT_JUSTIFY_CENTER);
+
+    // heart rate
+    dc.drawText(320, 100, Graphics.FONT_TINY, _dataFields.getHeartRate(), Graphics.TEXT_JUSTIFY_CENTER);
+    //dc.drawRectangle(300, 100, 35, 35);
+    
+    // battery
+    dc.drawText(320, 260, Graphics.FONT_TINY, _dataFields.getBattery(), Graphics.TEXT_JUSTIFY_CENTER);
+    
+    // steps
+    dc.drawText(_devCenter, 335, Graphics.FONT_TINY, _dataFields.getSteps(), Graphics.TEXT_JUSTIFY_CENTER);
   }
 
   (:debug)
@@ -176,15 +144,10 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
 
   (:release)
   private function clearScreen(dc as Dc) {
-    // no need for this on actual device.
+    // no need for this on actual device
   }
 
-  function drawDataField(dc as Dc, text as String, info as Array, color as Number) {
-    dc.setColor(_settings.textColor, _settings.bgColor);
-    dc.drawText(info[0], info[1], info[2], text, info[3]);
-  }
-
-  // for layout position debugging
+  // for layout position development
   private function drawGrid(dc as Dc) {
     var i = 0;
 
@@ -201,61 +164,20 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
     dc.drawLine(0, i, _devSize, i); // horizontal line
     dc.drawLine(i, 0, i, _devSize); // vertical line
   }
-
-  function drawColorPattern(dc, horizontal) {
-    var _colors = [
-      Graphics.COLOR_WHITE,
-      Graphics.COLOR_LT_GRAY,
-      Graphics.COLOR_DK_GRAY,
-      Graphics.COLOR_RED,
-      Graphics.COLOR_DK_RED,
-      Graphics.COLOR_ORANGE,
-      Graphics.COLOR_YELLOW,
-      Graphics.COLOR_GREEN,
-      Graphics.COLOR_DK_GREEN,
-      Graphics.COLOR_BLUE,
-      Graphics.COLOR_DK_BLUE,
-      Graphics.COLOR_PURPLE,
-      Graphics.COLOR_PINK,
-    ];
-
-    var pos = 0;
-    var gapSize = 2;
-    var colorSize = _colors.size();
-    var barSize = (_devSize - colorSize * gapSize) / colorSize;
-
-    for (var i = 0; i < colorSize; i++) {
-      dc.setColor(_colors[i], 0);
-
-      if (horizontal) {
-        dc.fillRectangle(0, pos, _devSize, barSize);
-      } else {
-        dc.fillRectangle(pos, 0, barSize, _devSize);
-      }
-
-      pos += barSize + gapSize;
-    }
-  }
-
+  
   // Called when this View is removed from the screen. Save the state of this View here.
   // This includes freeing resources from memory.
   function onHide() as Void {
     //System.println("onHide");
     _hidden = true;
-    //_dataFields.unsubscribeStress();
+    //_dataFields.unsubscribeFromComplications();
   }
 
   // Terminate any active timers and prepare for slow updates (once a minute).
   function onEnterSleep() as Void {
     //System.println("onEnterSleep");
     _lowPwrMode = true;
-    //_dataFields.unsubscribeStress();
-
-    if (_settings.layoutType == 0 && !_canBurnIn) {
-      // battery y pos for horizontal
-      _dataFieldLayout[9][1] = _rowSize * 6;
-    }
-
+    //_dataFields.unsubscribeFromComplications();
     //WatchUi.requestUpdate(); // not really required, onUpdate will be called anyway.
   }
 
@@ -263,13 +185,7 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
   function onExitSleep() as Void {
     //System.println("onExitSleep");
     _lowPwrMode = false;
-    //_dataFields.subscribeStress();
-
-    if (_settings.layoutType == 0 && !_canBurnIn) {
-      // battery y pos for horizontal
-      _dataFieldLayout[9][1] = _rowSize * 7 + 5;
-    }
-
+    //_dataFields.subscribeToComplications();
     //WatchUi.requestUpdate(); // not really required, onUpdate will be called anyway.
   }
 }

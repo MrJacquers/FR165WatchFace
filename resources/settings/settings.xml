@@ -231,7 +231,4 @@
             <listEntry value="0xFF00FF">@Strings.ColorPink</listEntry>
         </settingConfig>
     </setting>
-    <setting propertyKey="@Properties.ColorTest" title="@Strings.ColorTestTitle">
-        <settingConfig type="boolean" />
-    </setting>
 </settings>

@@ -17,7 +17,6 @@ class Settings {
     var stepsColor;
     var timeToRecoveryColor;
     var battColor;
-    var colorTest = false;
 
     var showGrid;
     var appAODEnabled = false;
@@ -42,7 +41,6 @@ class Settings {
             stepsColor = Application.Properties.getValue("StepsColor");
             timeToRecoveryColor = Application.Properties.getValue("TimeToRecoveryColor");
             battColor = Application.Properties.getValue("BattColor");
-            colorTest = Application.Properties.getValue("ColorTest");
         }
 
         // On-device settings, accessible via select watch face edit menu.
