@@ -94,12 +94,13 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
 
     // Get the date info, the strings will be localized.
     var dateInfo = Gregorian.info(Time.now(), Time.FORMAT_MEDIUM);
-    
-    dc.setColor(_settings.textColor, _settings.bgColor);
+    var nightMode = dateInfo.hour >= 18 || dateInfo.hour < 6;
+
+    dc.setColor(!nightMode ? _settings.textColor : 0xC80000, _settings.bgColor);
 
     // altitude
-    dc.drawText(_devCenter, 25, Graphics.FONT_TINY, _dataFields.getAltitude(), Graphics.TEXT_JUSTIFY_CENTER);
-    //dc.drawRectangle(185, 30, 35, 35);
+    dc.drawText(_devCenter, 15, Graphics.FONT_SMALL, _dataFields.getAltitude(), Graphics.TEXT_JUSTIFY_CENTER);
+    //dc.drawRectangle(175, 20, 50, 50);
 
     // hour
     dc.drawText(_devCenter, 77, _timeFont, dateInfo.hour.format("%02d"), Graphics.TEXT_JUSTIFY_CENTER);
@@ -109,31 +110,31 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
 
     // phone connected
     if (System.getDeviceSettings().phoneConnected) {
-      dc.drawText(70, _devCenter, Graphics.FONT_TINY, "B", Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+      dc.drawText(60, _devCenter, Graphics.FONT_SMALL, "B", Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
     }
 
     // date
-    dc.drawText(_devCenter, _devCenter, Graphics.FONT_TINY, _dataFields.getDate(dateInfo), Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+    dc.drawText(_devCenter, _devCenter, Graphics.FONT_SMALL, _dataFields.getDate(dateInfo), Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
 
     // seconds
-    dc.drawText(320, _devCenter, Graphics.FONT_TINY, dateInfo.sec.format("%02d"), Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+    dc.drawText(330, _devCenter, Graphics.FONT_SMALL, dateInfo.sec.format("%02d"), Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
 
     // recovery time
-    dc.drawText(70, 100, Graphics.FONT_TINY, _dataFields.getRecoveryTime(), Graphics.TEXT_JUSTIFY_CENTER);
+    dc.drawText(60, 95, Graphics.FONT_SMALL, _dataFields.getRecoveryTime(), Graphics.TEXT_JUSTIFY_CENTER);
     //dc.drawRectangle(50, 100, 35, 35);
 
-    // body battery
-    dc.drawText(70, 260, Graphics.FONT_TINY, _dataFields.getBodyBattery(), Graphics.TEXT_JUSTIFY_CENTER);
-
     // heart rate
-    dc.drawText(320, 100, Graphics.FONT_TINY, _dataFields.getHeartRate(), Graphics.TEXT_JUSTIFY_CENTER);
+    dc.drawText(330, 95, Graphics.FONT_SMALL, _dataFields.getHeartRate(), Graphics.TEXT_JUSTIFY_CENTER);
     //dc.drawRectangle(300, 100, 35, 35);
+
+    // body battery
+    dc.drawText(60, 250, Graphics.FONT_SMALL, _dataFields.getBodyBattery(), Graphics.TEXT_JUSTIFY_CENTER);
     
     // battery
-    dc.drawText(320, 260, Graphics.FONT_TINY, _dataFields.getBattery(), Graphics.TEXT_JUSTIFY_CENTER);
+    dc.drawText(330, 250, Graphics.FONT_SMALL, _dataFields.getBattery(), Graphics.TEXT_JUSTIFY_CENTER);
     
     // steps
-    dc.drawText(_devCenter, 335, Graphics.FONT_TINY, _dataFields.getSteps(), Graphics.TEXT_JUSTIFY_CENTER);
+    dc.drawText(_devCenter, 325, Graphics.FONT_SMALL, _dataFields.getSteps(), Graphics.TEXT_JUSTIFY_CENTER);
   }
 
   (:debug)

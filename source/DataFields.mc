@@ -89,7 +89,10 @@ class DataFields {
 
     function getAltitude() {
         if (Activity.getActivityInfo() has :altitude) {
-            return Activity.getActivityInfo().altitude.toNumber();
+            var altitude = Activity.getActivityInfo().altitude;
+            if (altitude != null) {
+                return altitude.toNumber();
+            }
         }
         return "--";        
     }
