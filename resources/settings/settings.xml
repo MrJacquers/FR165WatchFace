@@ -24,7 +24,10 @@
             <listEntry value="0xFF00FF">@Strings.ColorPink</listEntry>
         </settingConfig>
     </setting>
-    <setting propertyKey="@Properties.TextColor" title="@Strings.TextColorTitle">
+    <setting propertyKey="@Properties.TextColorDay" title="@Strings.TextColorDayTitle">
+        <settingConfig type="numeric" />
+    </setting>
+    <setting propertyKey="@Properties.TextColorNight" title="@Strings.TextColorNightTitle">
         <settingConfig type="numeric" />
     </setting>
     <setting propertyKey="@Properties.TimeFont" title="@Strings.TimeFontTitle">

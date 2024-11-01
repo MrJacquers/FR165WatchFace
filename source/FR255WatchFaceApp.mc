@@ -2,6 +2,9 @@ import Toybox.Application;
 import Toybox.Lang;
 import Toybox.WatchUi;
 
+var BatteryLevel = 0;
+var ShowBatteryHistory = false;
+
 class FR255WatchFaceApp extends Application.AppBase {
     private var _faceView = null;
 
@@ -13,6 +16,20 @@ class FR255WatchFaceApp extends Application.AppBase {
     // onStart() is called on application start up
     function onStart(state as Dictionary?) as Void {
         //System.println("app onStart");
+
+        //Settings.setValue("BatteryLevelHistory", "");
+        //Settings.setValue("BatteryLevelHistory", "01 10:15 50");
+
+        // get the battery level history
+        var history = Settings.getValue("BatteryLevelHistory", "");
+        if (!history.equals("")) {
+            var entries = Utils.splitString(history, ",");
+            //System.println(entries.toString());
+            var last = entries[entries.size() - 1];
+            var parts = Utils.splitString(last, " ");
+            //System.println(parts.toString());
+            BatteryLevel = parts[parts.size() -1].toNumber();
+        }
     }
 
     // onStop() is called when your application is exiting
@@ -27,10 +44,10 @@ class FR255WatchFaceApp extends Application.AppBase {
         return [_faceView, new WatchDelegate()];
     }
 
-    /*function getSettingsView() {
+    function getSettingsView() {
         //System.println("getSettingsView");
         return [new ODSettingsMenu(), new ODSettingsMenuDelegate()];
-    }*/
+    }
 
     // New app settings have been received so trigger a UI update.
     // This applies to settings via ConnectIQ, not on-device settings.

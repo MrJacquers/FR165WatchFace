@@ -4,7 +4,6 @@ import Toybox.Complications;
 
 class DataFields {
     var battLogEnabled = false;
-    private var _battery;
     private var _stress;
     private var _stressId;
 
@@ -43,10 +42,6 @@ class DataFields {
         }
     }
 
-    function getDate(dateInfo as Gregorian.Info) {
-        return Lang.format("$1$ $2$ $3$", [dateInfo.day_of_week, dateInfo.day, dateInfo.month]);
-    }
-
     function getHeartRate() {
         var hr = Activity.getActivityInfo().currentHeartRate;
         if (hr != null && hr != 0 && hr != 255) {
@@ -72,15 +67,15 @@ class DataFields {
     }
 
     function getRecoveryTime() {
-        if (ActivityMonitor.getInfo() has :timeToRecovery) {
+        /*if (ActivityMonitor.getInfo() has :timeToRecovery) {
             return ActivityMonitor.getInfo().timeToRecovery;
-        }
+        }*/
 
         if (Toybox has :Complications) {
             var compId = new Complications.Id(Complications.COMPLICATION_TYPE_RECOVERY_TIME);
             var comp = Complications.getComplication(compId);
             if (comp.value != null) {
-                return ((comp.value + 59) / 60).toNumber();
+                return (comp.value / 60.0).format("%.1f");
             }
         }
 
@@ -100,10 +95,32 @@ class DataFields {
     function getBattery() {
         //System.println("getBattery");
         var battery = System.getSystemStats().battery;
-        if (battLogEnabled && battery != _battery) {
-            _battery = battery;
-            var time = System.getClockTime();
-            System.println(Lang.format("Battery,$1$:$2$:$3$,$4$", [time.hour.format("%02d"), time.min.format("%02d"), time.sec.format("%02d"), battery]));
+
+        if (battLogEnabled && battery != BatteryLevel) {
+            BatteryLevel = battery;
+
+            // get the battery level history
+            var history = Settings.getValue("BatteryLevelHistory", "");
+            //System.println("history: " + history);
+                        
+            // add the battery level to the history
+            var dateInfo = Gregorian.info(Time.now(), Time.FORMAT_SHORT);
+            history += Lang.format("$1$ $2$:$3$: $4$,", [dateInfo.day.format("%02d"), dateInfo.hour.format("%02d"), dateInfo.min.format("%02d"), battery.format("%02d")]);
+
+            // split the history into entries
+            var entries = Utils.splitString(history, ",");
+            //System.println("entries: " + entries.toString());
+
+            var maxToKeep = 10;
+            if (entries.size() > maxToKeep) {
+                history = "";
+                for (var i = entries.size() - maxToKeep; i < entries.size(); i++) {
+                    history += entries[i] + ",";
+                }
+            }
+
+            // save the history
+            Settings.setValue("BatteryLevelHistory", history);
         }
 
         //return battery.format("%.2f") + "%";

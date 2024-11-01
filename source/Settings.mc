@@ -4,7 +4,8 @@ import Toybox.Application.Storage;
 class Settings {
     var layoutType;
     var bgColor;
-    var textColor;
+    var textColorDay;
+    var textColorNight;
     var timeFont;
     var dateColor;
     var hrColor;
@@ -28,7 +29,8 @@ class Settings {
         if (Toybox.Application has :Properties) {
             layoutType = Application.Properties.getValue("LayoutType");
             bgColor = Application.Properties.getValue("BGColor");
-            textColor = Application.Properties.getValue("TextColor");
+            textColorDay = Application.Properties.getValue("TextColorDay");
+            textColorNight = Application.Properties.getValue("TextColorNight");
             timeFont = Application.Properties.getValue("TimeFont");
             dateColor = Application.Properties.getValue("DateColor");
             hrColor = Application.Properties.getValue("HRColor");
@@ -51,16 +53,17 @@ class Settings {
         }
     }
 
-    function getValue(name, defaultValue) {
+    static function getValue(name, defaultValue) {
         var value = Storage.getValue(name);
-        if (value != null) {
-            return value;
-        } else {
+
+        if (value == null || value.equals("") || value.equals("null")) {
             return defaultValue;
         }
+        
+        return value;
     }
 
-    function setValue(key, value) {
+    static function setValue(key, value) {
         Storage.setValue(key, value);
     }
 }

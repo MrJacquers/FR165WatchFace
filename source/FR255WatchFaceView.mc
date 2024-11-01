@@ -71,24 +71,51 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
 
     if (_hidden) {
       //System.println("hidden");
-      //if (_settings.battLogEnabled) {
-      //  _dataFields.getBattery();
-      //}
+      if (_settings.battLogEnabled) {
+        _dataFields.getBattery();
+      }
+
+      dc.setColor(Graphics.COLOR_DK_GRAY, _settings.bgColor);
+      dc.drawText(_devCenter, _devCenter, Graphics.FONT_SMALL, "Hidden", Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
       return;
     }
 
     if (_lowPwrMode && _canBurnIn) {
       //System.println("low power mode");
-      //if (_settings.battLogEnabled) {
-      //  _dataFields.getBattery();
-      //}
+      if (_settings.battLogEnabled) {
+        _dataFields.getBattery();
+      }
+      return;
+    }
+
+    if (ShowBatteryHistory) {
+      if (_settings.battLogEnabled) {
+        _dataFields.getBattery();
+      }
+
+      var history = Settings.getValue("BatteryLevelHistory", "");
+      var entries = Utils.splitString(history, ",");
+
+      dc.setColor(Graphics.COLOR_DK_GRAY, _settings.bgColor);
+
+      if (entries.size() == 0) {
+        dc.drawText(_devCenter, _devCenter, Graphics.FONT_SMALL, "No battery history", Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+        return;
+      }
+      
+      var y = 60;
+      for (var i = 0; i < entries.size(); i++) {
+        dc.drawText(_devCenter, y, Graphics.FONT_TINY, entries[i], Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+        y += 30;
+      }
+      
       return;
     }
 
     // lines for positioning
-    //if (_settings.showGrid) {
-    //drawGrid(dc);
-    //}
+    if (_settings.showGrid) {
+      drawGrid(dc);
+    }
 
     //System.println("drawing");
 
@@ -96,11 +123,11 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
     var dateInfo = Gregorian.info(Time.now(), Time.FORMAT_MEDIUM);
     var nightMode = dateInfo.hour >= 18 || dateInfo.hour < 6;
 
-    dc.setColor(!nightMode ? _settings.textColor : 0xC80000, _settings.bgColor);
+    dc.setColor(nightMode ? _settings.textColorNight : _settings.textColorDay, _settings.bgColor);
 
     // altitude
     dc.drawText(_devCenter, 15, Graphics.FONT_SMALL, _dataFields.getAltitude(), Graphics.TEXT_JUSTIFY_CENTER);
-    //dc.drawRectangle(175, 20, 50, 50);
+    //dc.drawRectangle(160, 10, 80, 50);
 
     // hour
     dc.drawText(_devCenter, 77, _timeFont, dateInfo.hour.format("%02d"), Graphics.TEXT_JUSTIFY_CENTER);
@@ -114,24 +141,27 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
     }
 
     // date
-    dc.drawText(_devCenter, _devCenter, Graphics.FONT_SMALL, _dataFields.getDate(dateInfo), Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+    var date = Lang.format("$1$ $2$ $3$", [dateInfo.day_of_week, dateInfo.day, dateInfo.month]);
+    dc.drawText(_devCenter, _devCenter, Graphics.FONT_SMALL, date, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
 
     // seconds
     dc.drawText(330, _devCenter, Graphics.FONT_SMALL, dateInfo.sec.format("%02d"), Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
 
     // recovery time
     dc.drawText(60, 95, Graphics.FONT_SMALL, _dataFields.getRecoveryTime(), Graphics.TEXT_JUSTIFY_CENTER);
-    //dc.drawRectangle(50, 100, 35, 35);
+    //dc.drawRectangle(20, 95, 85, 45);
 
     // heart rate
     dc.drawText(330, 95, Graphics.FONT_SMALL, _dataFields.getHeartRate(), Graphics.TEXT_JUSTIFY_CENTER);
-    //dc.drawRectangle(300, 100, 35, 35);
+    //dc.drawRectangle(300, 95, 65, 50);
 
     // body battery
     dc.drawText(60, 250, Graphics.FONT_SMALL, _dataFields.getBodyBattery(), Graphics.TEXT_JUSTIFY_CENTER);
+    //dc.drawRectangle(20, 250, 85, 45);
     
     // battery
     dc.drawText(330, 250, Graphics.FONT_SMALL, _dataFields.getBattery(), Graphics.TEXT_JUSTIFY_CENTER);
+    //dc.drawRectangle(290, 245, 80, 50);
     
     // steps
     dc.drawText(_devCenter, 325, Graphics.FONT_SMALL, _dataFields.getSteps(), Graphics.TEXT_JUSTIFY_CENTER);
