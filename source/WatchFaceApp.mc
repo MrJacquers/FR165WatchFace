@@ -5,7 +5,7 @@ import Toybox.WatchUi;
 var BatteryLevel = 0;
 var ShowBatteryHistory = false;
 
-class FR255WatchFaceApp extends Application.AppBase {
+class WatchFaceApp extends Application.AppBase {
     private var _faceView = null;
 
     function initialize() {
@@ -40,7 +40,7 @@ class FR255WatchFaceApp extends Application.AppBase {
     // Return the initial view of your application here
     function getInitialView() as [Views] or [Views, InputDelegates] {
         //System.println("getInitialView");
-        _faceView = new FR255WatchFaceView();
+        _faceView = new WatchFaceView();
         return [_faceView, new WatchDelegate()];
     }
 
@@ -61,6 +61,6 @@ class FR255WatchFaceApp extends Application.AppBase {
     }
 }
 
-function getApp() as FR255WatchFaceApp {
-    return Application.getApp() as FR255WatchFaceApp;
+function getApp() as WatchFaceApp {
+    return Application.getApp() as WatchFaceApp;
 }

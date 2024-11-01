@@ -1,2 +1,2 @@
-# FR255WatchFace
-Garmin FR255 WatchFace
+# Jacquers WatchFace
+Garmin WatchFace for personal use.

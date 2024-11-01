@@ -1,11 +1,12 @@
 <strings>
-    <string id="AppName">WatchFace for FR255</string>
+    <string id="AppName">Jacquers WatchFace</string>
     <string id="LayoutTypeTitle">Layout Type</string>
     <string id="LayoutTypeHorizontal">Horizontal</string>
     <string id="LayoutTypeVertical">Vertical</string>
     <string id="BGColorTitle">Background Color</string>
     <string id="TextColorDayTitle">Text Color Day</string>
     <string id="TextColorNightTitle">Text Color Night</string>
+    <string id="TextColorSleepTitle">Text Color Sleep</string>
     <string id="TimeFontTitle">Time Font</string>
     <string id="TimeFontRajdhani">Rajdhani</string>
     <string id="TimeFontMonofonto">Monofonto</string>

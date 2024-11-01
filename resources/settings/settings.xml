@@ -30,6 +30,9 @@
     <setting propertyKey="@Properties.TextColorNight" title="@Strings.TextColorNightTitle">
         <settingConfig type="numeric" />
     </setting>
+    <setting propertyKey="@Properties.TextColorSleep" title="@Strings.TextColorSleepTitle">
+        <settingConfig type="numeric" />
+    </setting>
     <setting propertyKey="@Properties.TimeFont" title="@Strings.TimeFontTitle">
         <settingConfig type="list">
             <listEntry value="0">@Strings.TimeFontRajdhani</listEntry>

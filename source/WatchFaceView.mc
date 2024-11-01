@@ -4,7 +4,7 @@ import Toybox.System;
 import Toybox.WatchUi;
 import Toybox.Time.Gregorian;
 
-class FR255WatchFaceView extends WatchUi.WatchFace {
+class WatchFaceView extends WatchUi.WatchFace {
   private var _devSize;
   private var _devCenter;
   private var _timeFont;
@@ -13,7 +13,7 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
   private var _settings;
   private var _dataFields;
   private var _rowSize;
-  private var _canBurnIn;
+  //private var _canBurnIn;
 
   function initialize() {
     //System.println("view initialize");
@@ -26,10 +26,10 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
     //_dataFields.registerComplications();
     _dataFields.battLogEnabled = _settings.battLogEnabled;
 
-    var deviceSettings = System.getDeviceSettings();
+    /*var deviceSettings = System.getDeviceSettings();
     if (deviceSettings has :requiresBurnInProtection) {
       _canBurnIn = deviceSettings.requiresBurnInProtection;
-    }
+    }*/
   }
 
   function loadSettings() {
@@ -74,13 +74,10 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
       if (_settings.battLogEnabled) {
         _dataFields.getBattery();
       }
-
-      dc.setColor(Graphics.COLOR_DK_GRAY, _settings.bgColor);
-      dc.drawText(_devCenter, _devCenter, Graphics.FONT_SMALL, "Hidden", Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
       return;
     }
 
-    if (_lowPwrMode && _canBurnIn) {
+    if (_lowPwrMode /*&& _canBurnIn*/) {
       //System.println("low power mode");
       if (_settings.battLogEnabled) {
         _dataFields.getBattery();
@@ -113,17 +110,35 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
     }
 
     // lines for positioning
-    if (_settings.showGrid) {
+    /*if (_settings.showGrid) {
       drawGrid(dc);
-    }
-
-    //System.println("drawing");
+    }*/
 
     // Get the date info, the strings will be localized.
     var dateInfo = Gregorian.info(Time.now(), Time.FORMAT_MEDIUM);
-    var nightMode = dateInfo.hour >= 18 || dateInfo.hour < 6;
 
-    dc.setColor(nightMode ? _settings.textColorNight : _settings.textColorDay, _settings.bgColor);
+    // sleep mode display
+    if (dateInfo.hour > 21 || dateInfo.hour < 6) {
+      dc.setColor(_settings.textColorSleep, _settings.bgColor);
+      
+      // date
+      var date = Lang.format("$1$ $2$ $3$", [dateInfo.day_of_week, dateInfo.day, dateInfo.month]);
+      dc.drawText(_devCenter, 85, Graphics.FONT_SMALL, date, Graphics.TEXT_JUSTIFY_CENTER);
+      
+      // hour
+      dc.drawText(_devCenter - 5, _devCenter, _timeFont, dateInfo.hour.format("%02d"), Graphics.TEXT_JUSTIFY_RIGHT | Graphics.TEXT_JUSTIFY_VCENTER);
+      
+      // minute
+      dc.drawText(_devCenter + 5, _devCenter, _timeFont, dateInfo.min.format("%02d"), Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER);
+
+      // heart rate and battery
+      dc.drawText(_devCenter, 260, Graphics.FONT_SMALL, _dataFields.getHeartRate() + "   " +  _dataFields.getBattery(), Graphics.TEXT_JUSTIFY_CENTER);
+
+      return;
+    }
+
+    // Set the foreground color.
+    dc.setColor(dateInfo.hour < 18 ? _settings.textColorDay : _settings.textColorNight, _settings.bgColor);
 
     // altitude
     dc.drawText(_devCenter, 15, Graphics.FONT_SMALL, _dataFields.getAltitude(), Graphics.TEXT_JUSTIFY_CENTER);
@@ -165,6 +180,7 @@ class FR255WatchFaceView extends WatchUi.WatchFace {
     
     // steps
     dc.drawText(_devCenter, 325, Graphics.FONT_SMALL, _dataFields.getSteps(), Graphics.TEXT_JUSTIFY_CENTER);
+    //dc.drawRectangle(155, 325, 80, 50);
   }
 
   (:debug)

@@ -50,7 +50,7 @@ class WatchDelegate extends WatchFaceDelegate {
     }
 
     ShowBatteryHistory = false;
-    return false;
+    return true;
   }
 
   function onPowerBudgetExceeded(powerInfo as WatchUi.WatchFacePowerInfo) as Void {

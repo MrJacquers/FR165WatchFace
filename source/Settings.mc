@@ -6,6 +6,7 @@ class Settings {
     var bgColor;
     var textColorDay;
     var textColorNight;
+    var textColorSleep;
     var timeFont;
     var dateColor;
     var hrColor;
@@ -31,6 +32,7 @@ class Settings {
             bgColor = Application.Properties.getValue("BGColor");
             textColorDay = Application.Properties.getValue("TextColorDay");
             textColorNight = Application.Properties.getValue("TextColorNight");
+            textColorSleep = Application.Properties.getValue("TextColorSleep");
             timeFont = Application.Properties.getValue("TimeFont");
             dateColor = Application.Properties.getValue("DateColor");
             hrColor = Application.Properties.getValue("HRColor");
