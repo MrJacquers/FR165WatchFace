@@ -9,6 +9,8 @@ class WatchDelegate extends WatchFaceDelegate {
 	}
 
   function onPress(clickEvent) as Boolean {
+    ShowBatteryHistory = false;
+    
     var coords = clickEvent.getCoordinates();
     var x = coords[0];
     var y = coords[1];
@@ -49,10 +51,17 @@ class WatchDelegate extends WatchFaceDelegate {
       return true;
     }
 
-    ShowBatteryHistory = false;
+    //dc.drawRectangle(155, 325, 80, 50);
+    if (x >= 155 && y >= 325 && x <= 235 && y <= 375) {
+      //System.println("onPress: steps");
+      Complications.exitTo(new Complications.Id(Complications.COMPLICATION_TYPE_STEPS));
+      return true;
+    }
+
     return true;
   }
 
+  // Handle a partial update exceeding the power budget.
   function onPowerBudgetExceeded(powerInfo as WatchUi.WatchFacePowerInfo) as Void {
     System.println("onPowerBudgetExceeded: Allowed " + powerInfo.executionTimeLimit + " but avg was " + powerInfo.executionTimeAverage);
   }

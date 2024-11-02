@@ -20,7 +20,7 @@ class WatchFaceView extends WatchUi.WatchFace {
     loadSettings();
     
     _dataFields = new DataFields();
-    //_dataFields.registerComplications();
+    _dataFields.registerComplications();
     _dataFields.battLogEnabled = _settings.battLogEnabled;
   }
 
@@ -51,7 +51,7 @@ class WatchFaceView extends WatchUi.WatchFace {
     //System.println("onShow");
     _hidden = false;
     _lowPwrMode = false;
-    //_dataFields.subscribeToComplications();
+    //_dataFields.subscribeComplications();
   }
 
   // Called when this View is removed from the screen. Save the state of this View here.
@@ -59,14 +59,14 @@ class WatchFaceView extends WatchUi.WatchFace {
   function onHide() as Void {
     //System.println("onHide");
     _hidden = true;
-    //_dataFields.unsubscribeFromComplications();
+    //_dataFields.unsubscribeComplications();
   }
 
   // Terminate any active timers and prepare for slow updates (once a minute).
   function onEnterSleep() as Void {
     //System.println("onEnterSleep");
     _lowPwrMode = true;
-    //_dataFields.unsubscribeFromComplications();
+    //_dataFields.unsubscribeComplications();
     //WatchUi.requestUpdate(); // not really required, onUpdate will be called anyway.
   }
 
@@ -74,7 +74,7 @@ class WatchFaceView extends WatchUi.WatchFace {
   function onExitSleep() as Void {
     //System.println("onExitSleep");
     _lowPwrMode = false;
-    //_dataFields.subscribeToComplications();
+    //_dataFields.subscribeComplications();
     //WatchUi.requestUpdate(); // not really required, onUpdate will be called anyway.
   }
 
@@ -82,7 +82,7 @@ class WatchFaceView extends WatchUi.WatchFace {
   // Called once a minute in low power mode.
   // Called every second in high power mode, e.g. after a gesture, for a couple of seconds.
   function onUpdate(dc as Dc) as Void {
-    //System.print("onUpdate: ");
+    //System.println("onUpdate");
     clearScreen(dc);
 
     if (_hidden || _lowPwrMode) {

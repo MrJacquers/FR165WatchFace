@@ -4,40 +4,65 @@ import Toybox.Complications;
 
 class DataFields {
     var battLogEnabled = false;
-    private var _stress;
-    private var _stressId;
+    //private var _bodyBattery;
+    //private var _recoveryTime;
+    private var _bodyBatteryId;
+    private var _recoveryTimeId;
 
     // https://developer.garmin.com/connect-iq/core-topics/complications/
     // https://developer.garmin.com/connect-iq/api-docs/Toybox/Complications.html
     function registerComplications() {
-        if (Toybox has :Complications) {
-            //System.println("registering complications");
-            _stressId = new Complications.Id(Complications.COMPLICATION_TYPE_STRESS);
-            Complications.registerComplicationChangeCallback(self.method(:onComplicationChanged));
+        if (Toybox has :Complications == false) {
+            return;
+        }
+        
+        _bodyBatteryId = new Complications.Id(Complications.COMPLICATION_TYPE_BODY_BATTERY);
+        _recoveryTimeId = new Complications.Id(Complications.COMPLICATION_TYPE_RECOVERY_TIME);
+        //Complications.registerComplicationChangeCallback(self.method(:onComplicationChanged));
+    }
+
+    // not used, keeping as example
+    function subscribeComplications() {
+        //_bodyBattery = null;
+        //_recoveryTime = null;
+
+        if (_bodyBatteryId != null) {
+            Complications.subscribeToUpdates(_bodyBatteryId);
+        }
+
+        if (_recoveryTimeId!= null) {
+            Complications.subscribeToUpdates(_recoveryTimeId);
         }
     }
 
-    function subscribeToComplications() {
-        _stress = null;
-        if (_stressId != null) {
-            Complications.subscribeToUpdates(_stressId);
+    // not used, keeping as example
+    function unsubscribeComplications() {
+        //_bodyBattery = null;
+        //_recoveryTime = null;
+
+        if (_bodyBatteryId != null) {
+            Complications.unsubscribeFromUpdates(_bodyBatteryId);
+        }
+
+        if (_recoveryTimeId != null) {
+            Complications.unsubscribeFromUpdates(_recoveryTimeId);
         }
     }
 
-    function unsubscribeFromComplications() {
-        _stress = null;
-        if (_stressId != null) {
-            Complications.unsubscribeFromUpdates(_stressId);
-        }
-    }
-
+    // not used, keeping as example
     function onComplicationChanged(id as Complications.Id) as Void {
         //System.println("onComplicationChanged");
-        var comp = Complications.getComplication(id);
+        //var comp = Complications.getComplication(id);
 
-        if (id == _stressId) {
-            //System.println("stress updated: " + comp.value);
-            _stress = comp.value;
+        if (id == _bodyBatteryId) {
+            //System.println("body battery updated: " + comp.value);
+            //_bodyBattery = comp.value;
+            return;
+        }
+
+        if (id == _recoveryTimeId) {
+            //System.println("recovery time updated: " + comp.value);
+            //_recoveryTime = comp.value;
             return;
         }
     }
@@ -51,45 +76,34 @@ class DataFields {
     }
 
     function getBodyBattery() {
-        var comp = Complications.getComplication(new Complications.Id(Complications.COMPLICATION_TYPE_BODY_BATTERY));
+        var comp = Complications.getComplication(_bodyBatteryId);        
         if (comp.value != null) {
-            return (comp.value);
+            return comp.value;
         }
         return "--";
     }
     
-    function getStress() {
-        return ActivityMonitor.getInfo().stressScore + "%"; // rolling 30s average
-    }
-
     function getSteps() {
         return ActivityMonitor.getInfo().steps;
     }
 
     function getRecoveryTime() {
-        /*if (ActivityMonitor.getInfo() has :timeToRecovery) {
-            return ActivityMonitor.getInfo().timeToRecovery;
-        }*/
-
-        if (Toybox has :Complications) {
-            var compId = new Complications.Id(Complications.COMPLICATION_TYPE_RECOVERY_TIME);
-            var comp = Complications.getComplication(compId);
-            if (comp.value != null) {
-                return (comp.value / 60.0).format("%.1f");
-            }
+        var comp = Complications.getComplication(_recoveryTimeId);
+        if (comp.value != null) {
+            return (comp.value / 60.0).format("%.1f");
         }
-
         return "--";
     }
 
     function getAltitude() {
-        if (Activity.getActivityInfo() has :altitude) {
-            var altitude = Activity.getActivityInfo().altitude;
+        var activityInfo = Activity.getActivityInfo();
+        if (activityInfo has :altitude) {
+            var altitude = activityInfo.altitude;
             if (altitude != null) {
                 return altitude.toNumber();
             }
         }
-        return "--";        
+        return "--";
     }
 
     function getBattery() {
