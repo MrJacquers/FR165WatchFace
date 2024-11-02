@@ -11,7 +11,7 @@ class ODSettingsMenuDelegate extends WatchUi.Menu2InputDelegate {
         var id = item.getId();
 
         if (item instanceof ToggleMenuItem) {
-            (new Settings()).setValue(id, item.isEnabled());
+            (new Settings()).setStorageValue(id, item.isEnabled());
             return;
         }
     }

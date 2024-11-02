@@ -9,7 +9,7 @@ class ODSettingsMenu extends WatchUi.Menu2 {
 
         var settings = new Settings();
         settings.loadSettings();
-        Menu2.addItem(new WatchUi.ToggleMenuItem("Show Grid", "Show Grid", "GridEnabled", settings.showGrid, null));
-        Menu2.addItem(new WatchUi.ToggleMenuItem("Batt Log", "Log Battery Level", "BattLogEnabled", settings.battLogEnabled, null));
+        Menu2.addItem(new WatchUi.ToggleMenuItem("Battery Log", "Log Battery Level", "BattLogEnabled", settings.battLogEnabled, null));
+        Menu2.addItem(new WatchUi.ToggleMenuItem("Grid", "Draw Grid Lines", "GridEnabled", settings.showGrid, null));
     }
 }

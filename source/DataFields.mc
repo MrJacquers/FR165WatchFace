@@ -100,12 +100,12 @@ class DataFields {
             BatteryLevel = battery;
 
             // get the battery level history
-            var history = Settings.getValue("BatteryLevelHistory", "");
+            var history = Settings.getStorageValue("BatteryLevelHistory", "");
             //System.println("history: " + history);
                         
             // add the battery level to the history
             var dateInfo = Gregorian.info(Time.now(), Time.FORMAT_SHORT);
-            history += Lang.format("$1$ $2$:$3$: $4$,", [dateInfo.day.format("%02d"), dateInfo.hour.format("%02d"), dateInfo.min.format("%02d"), battery.format("%02d")]);
+            history += Lang.format("$1$ $2$:$3$ $4$,", [dateInfo.day.format("%02d"), dateInfo.hour.format("%02d"), dateInfo.min.format("%02d"), battery.format("%02d")]);
 
             // split the history into entries
             var entries = Utils.splitString(history, ",");
@@ -120,7 +120,7 @@ class DataFields {
             }
 
             // save the history
-            Settings.setValue("BatteryLevelHistory", history);
+            Settings.setStorageValue("BatteryLevelHistory", history);
         }
 
         //return battery.format("%.2f") + "%";

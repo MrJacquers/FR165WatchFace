@@ -12,37 +12,24 @@ class WatchFaceView extends WatchUi.WatchFace {
   private var _lowPwrMode;
   private var _settings;
   private var _dataFields;
-  private var _rowSize;
-  //private var _canBurnIn;
 
   function initialize() {
     //System.println("view initialize");
     WatchFace.initialize();
 
-    _settings = new Settings();
     loadSettings();
     
     _dataFields = new DataFields();
     //_dataFields.registerComplications();
     _dataFields.battLogEnabled = _settings.battLogEnabled;
-
-    /*var deviceSettings = System.getDeviceSettings();
-    if (deviceSettings has :requiresBurnInProtection) {
-      _canBurnIn = deviceSettings.requiresBurnInProtection;
-    }*/
   }
 
   function loadSettings() {
+    if (_settings == null) {
+      _settings = new Settings();
+    }
+    
     _settings.loadSettings();
-  }
-
-  // Load your resources here
-  function onLayout(dc as Dc) as Void {
-    //System.println("onLayout");
-
-    _devSize = dc.getWidth();
-    _devCenter = _devSize / 2;
-    _rowSize = _devSize / 20.0;
 
     if (_settings.timeFont == 0) {
       _timeFont = WatchUi.loadResource(Rez.Fonts.id_rajdhani_bold_mono);
@@ -51,15 +38,44 @@ class WatchFaceView extends WatchUi.WatchFace {
     }
   }
 
+  function onLayout(dc as Dc) as Void {
+    //System.println("onLayout");
+    _devSize = dc.getWidth();
+    _devCenter = _devSize / 2;
+  }
+
   // Called when this View is brought to the foreground.
   // Restore the state of this View and prepare it to be shown.
   // This includes loading resources into memory.
   function onShow() as Void {
     //System.println("onShow");
-    //_settings.loadSettings();
     _hidden = false;
     _lowPwrMode = false;
     //_dataFields.subscribeToComplications();
+  }
+
+  // Called when this View is removed from the screen. Save the state of this View here.
+  // This includes freeing resources from memory.
+  function onHide() as Void {
+    //System.println("onHide");
+    _hidden = true;
+    //_dataFields.unsubscribeFromComplications();
+  }
+
+  // Terminate any active timers and prepare for slow updates (once a minute).
+  function onEnterSleep() as Void {
+    //System.println("onEnterSleep");
+    _lowPwrMode = true;
+    //_dataFields.unsubscribeFromComplications();
+    //WatchUi.requestUpdate(); // not really required, onUpdate will be called anyway.
+  }
+
+  // The user has just looked at their watch. Timers and animations may be started here.
+  function onExitSleep() as Void {
+    //System.println("onExitSleep");
+    _lowPwrMode = false;
+    //_dataFields.subscribeToComplications();
+    //WatchUi.requestUpdate(); // not really required, onUpdate will be called anyway.
   }
 
   // Updates the View:
@@ -69,15 +85,7 @@ class WatchFaceView extends WatchUi.WatchFace {
     //System.print("onUpdate: ");
     clearScreen(dc);
 
-    if (_hidden) {
-      //System.println("hidden");
-      if (_settings.battLogEnabled) {
-        _dataFields.getBattery();
-      }
-      return;
-    }
-
-    if (_lowPwrMode /*&& _canBurnIn*/) {
+    if (_hidden || _lowPwrMode) {
       //System.println("low power mode");
       if (_settings.battLogEnabled) {
         _dataFields.getBattery();
@@ -86,17 +94,19 @@ class WatchFaceView extends WatchUi.WatchFace {
     }
 
     if (ShowBatteryHistory) {
-      if (_settings.battLogEnabled) {
-        _dataFields.getBattery();
+      dc.setColor(Graphics.COLOR_DK_GRAY, _settings.bgColor);
+      
+      if (!_settings.battLogEnabled) {
+        dc.drawText(_devCenter, _devCenter, Graphics.FONT_SMALL, "Battery Log Disabled", Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+        return;
       }
 
-      var history = Settings.getValue("BatteryLevelHistory", "");
+      _dataFields.getBattery();
+      var history = Settings.getStorageValue("BatteryLevelHistory", "");
       var entries = Utils.splitString(history, ",");
 
-      dc.setColor(Graphics.COLOR_DK_GRAY, _settings.bgColor);
-
       if (entries.size() == 0) {
-        dc.drawText(_devCenter, _devCenter, Graphics.FONT_SMALL, "No battery history", Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+        dc.drawText(_devCenter, _devCenter, Graphics.FONT_SMALL, "No Battery History", Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
         return;
       }
       
@@ -197,10 +207,11 @@ class WatchFaceView extends WatchUi.WatchFace {
   // for layout position development
   private function drawGrid(dc as Dc) {
     var i = 0;
+    var gapSize = _devSize / 20.0;
 
     dc.setColor(Graphics.COLOR_DK_GRAY, -1);
     do {
-      i += _rowSize;
+      i += gapSize;
       dc.drawLine(0, i, _devSize, i); // horizontal line
       dc.drawLine(i, 0, i, _devSize); // vertical line
       //dc.drawCircle(_devCenter,_devCenter,i);  // x,y,r
@@ -210,29 +221,5 @@ class WatchFaceView extends WatchUi.WatchFace {
     dc.setColor(Graphics.COLOR_LT_GRAY, -1);
     dc.drawLine(0, i, _devSize, i); // horizontal line
     dc.drawLine(i, 0, i, _devSize); // vertical line
-  }
-  
-  // Called when this View is removed from the screen. Save the state of this View here.
-  // This includes freeing resources from memory.
-  function onHide() as Void {
-    //System.println("onHide");
-    _hidden = true;
-    //_dataFields.unsubscribeFromComplications();
-  }
-
-  // Terminate any active timers and prepare for slow updates (once a minute).
-  function onEnterSleep() as Void {
-    //System.println("onEnterSleep");
-    _lowPwrMode = true;
-    //_dataFields.unsubscribeFromComplications();
-    //WatchUi.requestUpdate(); // not really required, onUpdate will be called anyway.
-  }
-
-  // The user has just looked at their watch. Timers and animations may be started here.
-  function onExitSleep() as Void {
-    //System.println("onExitSleep");
-    _lowPwrMode = false;
-    //_dataFields.subscribeToComplications();
-    //WatchUi.requestUpdate(); // not really required, onUpdate will be called anyway.
   }
 }

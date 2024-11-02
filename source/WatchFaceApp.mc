@@ -21,7 +21,7 @@ class WatchFaceApp extends Application.AppBase {
         //Settings.setValue("BatteryLevelHistory", "01 10:15 50");
 
         // get the battery level history
-        var history = Settings.getValue("BatteryLevelHistory", "");
+        var history = Settings.getStorageValue("BatteryLevelHistory", "");
         if (!history.equals("")) {
             var entries = Utils.splitString(history, ",");
             //System.println(entries.toString());
@@ -49,9 +49,9 @@ class WatchFaceApp extends Application.AppBase {
         return [new ODSettingsMenu(), new ODSettingsMenuDelegate()];
     }
 
-    // New app settings have been received so trigger a UI update.
+    // New app settings have been received, so trigger a UI update.
     // This applies to settings via ConnectIQ, not on-device settings.
-    // I think that when using ODS the app gets restarted.
+    // When using ODS it looks like the app gets restarted.
     function onSettingsChanged() as Void {
         //System.println("onSettingsChanged");
         if (_faceView != null) {

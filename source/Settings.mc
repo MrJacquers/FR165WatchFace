@@ -21,12 +21,12 @@ class Settings {
     var battColor;
 
     var showGrid;
-    var appAODEnabled = false;
     var battLogEnabled = false;
 
     function loadSettings() {
         // Set via ConnectIQ App.
         // https://developer.garmin.com/connect-iq/core-topics/properties-and-app-settings/
+        // https://forums.garmin.com/developer/connect-iq/w/wiki/4/new-developer-faq#settings-crash
         if (Toybox.Application has :Properties) {
             layoutType = Application.Properties.getValue("LayoutType");
             bgColor = Application.Properties.getValue("BGColor");
@@ -49,13 +49,12 @@ class Settings {
 
         // On-device settings, accessible via select watch face edit menu.
         if (Toybox.Application has :Storage) {
-            showGrid = getValue("GridEnabled", false);
-            appAODEnabled = getValue("AODModeEnabled", false);
-            battLogEnabled = getValue("BattLogEnabled", false);
+            showGrid = getStorageValue("GridEnabled", false);
+            battLogEnabled = getStorageValue("BattLogEnabled", false);
         }
     }
 
-    static function getValue(name, defaultValue) {
+    static function getStorageValue(name, defaultValue) {
         var value = Storage.getValue(name);
 
         if (value == null || value.equals("") || value.equals("null")) {
@@ -65,7 +64,7 @@ class Settings {
         return value;
     }
 
-    static function setValue(key, value) {
+    static function setStorageValue(key, value) {
         Storage.setValue(key, value);
     }
 }
