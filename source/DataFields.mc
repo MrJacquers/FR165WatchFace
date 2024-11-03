@@ -6,6 +6,7 @@ class DataFields {
     var battLogEnabled = false;
     //private var _bodyBattery;
     //private var _recoveryTime;
+    private var _altitudeId;
     private var _bodyBatteryId;
     private var _recoveryTimeId;
 
@@ -16,6 +17,7 @@ class DataFields {
             return;
         }
         
+        _altitudeId = new Complications.Id(Complications.COMPLICATION_TYPE_ALTITUDE);
         _bodyBatteryId = new Complications.Id(Complications.COMPLICATION_TYPE_BODY_BATTERY);
         _recoveryTimeId = new Complications.Id(Complications.COMPLICATION_TYPE_RECOVERY_TIME);
         //Complications.registerComplicationChangeCallback(self.method(:onComplicationChanged));
@@ -95,13 +97,10 @@ class DataFields {
         return "--";
     }
 
-    function getAltitude() {
-        var activityInfo = Activity.getActivityInfo();
-        if (activityInfo has :altitude) {
-            var altitude = activityInfo.altitude;
-            if (altitude != null) {
-                return altitude.toNumber();
-            }
+     function getAltitude() {
+        var comp = Complications.getComplication(_altitudeId);
+        if (comp.value != null) {
+            return comp.value;
         }
         return "--";
     }
