@@ -15,9 +15,9 @@ class Settings {
     var minuteColor;
     var secColor;
     var bodyBattColor;
-    var stressColor;
+    var altitudeColor;
     var stepsColor;
-    var timeToRecoveryColor;
+    var recoveryColor;
     var battColor;
 
     var showGrid;
@@ -41,9 +41,9 @@ class Settings {
             minuteColor = Application.Properties.getValue("MinuteColor");
             secColor = Application.Properties.getValue("SecColor");
             bodyBattColor = Application.Properties.getValue("BodyBattColor");
-            stressColor = Application.Properties.getValue("StressColor");
+            altitudeColor = Application.Properties.getValue("AltitudeColor");
             stepsColor = Application.Properties.getValue("StepsColor");
-            timeToRecoveryColor = Application.Properties.getValue("TimeToRecoveryColor");
+            recoveryColor = Application.Properties.getValue("RecoveryColor");
             battColor = Application.Properties.getValue("BattColor");
         }
 

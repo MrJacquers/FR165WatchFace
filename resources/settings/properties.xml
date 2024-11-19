@@ -13,8 +13,8 @@
     <property id="MinuteColor" type="number">0x00FF00</property>
     <property id="SecColor" type="number">0xFF5500</property>
     <property id="BodyBattColor" type="number">0xAAAAAA</property>
-    <property id="StressColor" type="number">0xAAAAAA</property>
+    <property id="AltitudeColor" type="number">0xAAAAAA</property>
     <property id="StepsColor" type="number">0xAAAAAA</property>
-    <property id="TimeToRecoveryColor" type="number">0xAAAAAA</property>
+    <property id="RecoveryColor" type="number">0xAAAAAA</property>
     <property id="BattColor" type="number">0xAAAAAA</property>
 </properties>

@@ -32,9 +32,11 @@ class WatchFaceView extends WatchUi.WatchFace {
     _settings.loadSettings();
 
     if (_settings.timeFont == 0) {
-      _timeFont = WatchUi.loadResource(Rez.Fonts.id_rajdhani_bold_mono);
+      _timeFont = WatchUi.loadResource(Rez.Fonts.id_source_sans_pro_bold);
+    } else if (_settings.timeFont == 1) {
+      _timeFont = WatchUi.loadResource(Rez.Fonts.id_poppins_bold);
     } else {
-      _timeFont = WatchUi.loadResource(Rez.Fonts.id_monofonto_bold_mono);
+      _timeFont = WatchUi.loadResource(Rez.Fonts.id_rajdhani_bold_mono);
     }
   }
 
@@ -81,6 +83,7 @@ class WatchFaceView extends WatchUi.WatchFace {
   // Updates the View:
   // Called once a minute in low power mode.
   // Called every second in high power mode, e.g. after a gesture, for a couple of seconds.
+  (:fr165m)
   function onUpdate(dc as Dc) as Void {
     //System.println("onUpdate");
     clearScreen(dc);
@@ -191,6 +194,82 @@ class WatchFaceView extends WatchUi.WatchFace {
     // steps
     dc.drawText(_devCenter, 325, Graphics.FONT_SMALL, _dataFields.getSteps(), Graphics.TEXT_JUSTIFY_CENTER);
     //dc.drawRectangle(155, 325, 80, 50);
+  }
+
+  (:fr255)
+  function onUpdate(dc as Dc) as Void {
+    //System.println("onUpdate");
+    clearScreen(dc);
+
+    if (_hidden) {
+      //System.println("low power mode");
+      if (_settings.battLogEnabled) {
+        _dataFields.getBattery();
+      }
+      return;
+    }
+    
+    // lines for positioning
+    //if (_settings.showGrid) {
+      //drawGrid(dc);
+    //}
+
+    // Get the date info, the strings will be localized.
+    var dateInfo = Gregorian.info(Time.now(), Time.FORMAT_MEDIUM);
+            
+    // hour
+    dc.setColor(_settings.hourColor, 0);
+    dc.drawText(_devCenter, 52, _timeFont, dateInfo.hour.format("%02d"), Graphics.TEXT_JUSTIFY_CENTER);
+
+    // minute
+    dc.setColor(_settings.minuteColor, 0);
+    dc.drawText(_devCenter, 156, _timeFont, dateInfo.min.format("%02d"), Graphics.TEXT_JUSTIFY_CENTER);
+
+    // phone connected
+    if (System.getDeviceSettings().phoneConnected) {
+      dc.setColor(_settings.connectColor, 0);
+      dc.drawText(40, _devCenter, Graphics.FONT_SMALL, "B", Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+    }
+
+    // date
+    dc.setColor(_settings.dateColor, 0);
+    var date = Lang.format("$1$ $2$ $3$", [dateInfo.day_of_week, dateInfo.day, dateInfo.month]);
+    dc.drawText(_devCenter, _devCenter, Graphics.FONT_SMALL, date, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+
+    if (_lowPwrMode) {
+      // battery
+      dc.setColor(_settings.battColor, 0);
+      dc.drawText(_devCenter, 220, Graphics.FONT_SMALL, _dataFields.getBattery(), Graphics.TEXT_JUSTIFY_CENTER);
+      return;
+    }
+
+    // altitude
+    dc.setColor(_settings.altitudeColor, 0);
+    dc.drawText(_devCenter, 10, Graphics.FONT_SMALL, _dataFields.getAltitude(), Graphics.TEXT_JUSTIFY_CENTER);
+
+    // seconds
+    dc.setColor(_settings.secColor, 0);
+    dc.drawText(220, _devCenter, Graphics.FONT_SMALL, dateInfo.sec.format("%02d"), Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+
+    // recovery time
+    dc.setColor(_settings.recoveryColor, 0);
+    dc.drawText(40, 60, Graphics.FONT_SMALL, _dataFields.getRecoveryTime(), Graphics.TEXT_JUSTIFY_CENTER);
+
+    // heart rate
+    dc.setColor(_settings.hrColor, 0);
+    dc.drawText(220, 60, Graphics.FONT_SMALL, _dataFields.getHeartRate(), Graphics.TEXT_JUSTIFY_CENTER);
+
+    // body battery
+    dc.setColor(_settings.bodyBattColor, 0);
+    dc.drawText(40, 165, Graphics.FONT_SMALL, _dataFields.getBodyBattery(), Graphics.TEXT_JUSTIFY_CENTER);
+    
+    // battery
+    dc.setColor(_settings.battColor, 0);
+    dc.drawText(220, 165, Graphics.FONT_SMALL, _dataFields.getBattery(), Graphics.TEXT_JUSTIFY_CENTER);
+    
+    // steps
+    dc.setColor(_settings.stepsColor, 0);
+    dc.drawText(_devCenter, 220, Graphics.FONT_SMALL, _dataFields.getSteps(), Graphics.TEXT_JUSTIFY_CENTER);
   }
 
   (:debug)

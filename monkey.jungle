@@ -1,1 +1,4 @@
 project.manifest = manifest.xml
+
+fr165m.excludeAnnotations = fr255
+fr255.excludeAnnotations = fr165m

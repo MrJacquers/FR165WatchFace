@@ -9,7 +9,8 @@
     <string id="TextColorSleepTitle">Text Color Sleep</string>
     <string id="TimeFontTitle">Time Font</string>
     <string id="TimeFontRajdhani">Rajdhani</string>
-    <string id="TimeFontMonofonto">Monofonto</string>
+    <string id="TimeFontPoppins">Poppins</string>
+    <string id="TimeFontSourceSansPro">SourceSansPro</string>
     <string id="DateColorTitle">Date Color</string>
     <string id="HRColorTitle">Heart Rate Color</string>
     <string id="ConnectColorTitle">Connection  Color</string>
@@ -17,9 +18,9 @@
     <string id="MinuteColorTitle">Minute Color</string>
     <string id="SecColorTitle">Seconds Color</string>
     <string id="BodyBattColorTitle">Body Battery Color</string>
-    <string id="StressColorTitle">Stress Score Color</string>
+    <string id="AltitudeColorTitle">Stress Score Color</string>
     <string id="StepsColorTitle">Steps Color</string>
-    <string id="TimeToRecoveryColorTitle">Time to Recovery Color</string>
+    <string id="RecoveryColorTitle">Time to Recovery Color</string>
     <string id="BattColorTitle">Battery Color</string>
     <string id="ColorWhite">White</string>
     <string id="ColorLightGray">Light Gray</string>

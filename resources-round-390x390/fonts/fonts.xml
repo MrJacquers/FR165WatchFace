@@ -1,4 +1,5 @@
 <fonts>
     <font id="id_rajdhani_bold_mono" filename="rajdhani_bold_mono_outline_112.fnt" antialias="true" filter="0123456789:" />
-    <font id="id_monofonto_bold_mono" filename="monofonto_bold_outline_112.fnt" antialias="true" filter="0123456789:" />
+    <font id="id_poppins_bold" filename="poppins_bold_outline_112.fnt" antialias="true" filter="0123456789:" />
+    <font id="id_source_sans_pro_bold" filename="source_sans_pro_bold_outline_112.fnt" antialias="true" filter="0123456789:" />
 </fonts>
