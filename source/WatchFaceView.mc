@@ -32,7 +32,7 @@ class WatchFaceView extends WatchUi.WatchFace {
     _settings.loadSettings();
 
     if (_settings.timeFont == 0) {
-      _timeFont = WatchUi.loadResource(Rez.Fonts.id_source_sans_pro_bold);
+      _timeFont = WatchUi.loadResource(Rez.Fonts.id_saira_outline);
     } else if (_settings.timeFont == 1) {
       _timeFont = WatchUi.loadResource(Rez.Fonts.id_poppins_bold);
     } else {
@@ -154,124 +154,44 @@ class WatchFaceView extends WatchUi.WatchFace {
     dc.setColor(dateInfo.hour < 18 ? _settings.textColorDay : _settings.textColorNight, _settings.bgColor);
 
     // altitude
-    dc.drawText(_devCenter, 15, Graphics.FONT_SMALL, _dataFields.getAltitude(), Graphics.TEXT_JUSTIFY_CENTER);
+    //dc.drawText(_devCenter, 15, Graphics.FONT_SMALL, _dataFields.getAltitude(), Graphics.TEXT_JUSTIFY_CENTER);
     //dc.drawRectangle(160, 10, 80, 50);
 
     // hour
-    dc.drawText(_devCenter, 77, _timeFont, dateInfo.hour.format("%02d"), Graphics.TEXT_JUSTIFY_CENTER);
+    dc.drawText(110, 80, _timeFont, dateInfo.hour.format("%02d"), Graphics.TEXT_JUSTIFY_CENTER);
 
     // minute
-    dc.drawText(_devCenter, 233, _timeFont, dateInfo.min.format("%02d"), Graphics.TEXT_JUSTIFY_CENTER);
+    dc.drawText(110, 235, _timeFont, dateInfo.min.format("%02d"), Graphics.TEXT_JUSTIFY_CENTER);
 
     // phone connected
     if (System.getDeviceSettings().phoneConnected) {
-      dc.drawText(60, _devCenter, Graphics.FONT_SMALL, "B", Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+      dc.drawText(_devCenter, 40, Graphics.FONT_SMALL, "B", Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
     }
 
     // date
     var date = Lang.format("$1$ $2$ $3$", [dateInfo.day_of_week, dateInfo.day, dateInfo.month]);
-    dc.drawText(_devCenter, _devCenter, Graphics.FONT_SMALL, date, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
-
-    // seconds
-    dc.drawText(330, _devCenter, Graphics.FONT_SMALL, dateInfo.sec.format("%02d"), Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
-
-    // recovery time
-    dc.drawText(60, 95, Graphics.FONT_SMALL, _dataFields.getRecoveryTime(), Graphics.TEXT_JUSTIFY_CENTER);
-    //dc.drawRectangle(20, 95, 85, 45);
+    dc.drawText(100, _devCenter, Graphics.FONT_SMALL, date, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
 
     // heart rate
-    dc.drawText(330, 95, Graphics.FONT_SMALL, _dataFields.getHeartRate(), Graphics.TEXT_JUSTIFY_CENTER);
-    //dc.drawRectangle(300, 95, 65, 50);
+    dc.drawText(210, 75, Graphics.FONT_SMALL, "HR: " + _dataFields.getHeartRate(), Graphics.TEXT_JUSTIFY_LEFT);
 
-    // body battery
-    dc.drawText(60, 250, Graphics.FONT_SMALL, _dataFields.getBodyBattery(), Graphics.TEXT_JUSTIFY_CENTER);
-    //dc.drawRectangle(20, 250, 85, 45);
-    
-    // battery
-    dc.drawText(330, 250, Graphics.FONT_SMALL, _dataFields.getBattery(), Graphics.TEXT_JUSTIFY_CENTER);
-    //dc.drawRectangle(290, 245, 80, 50);
-    
     // steps
-    dc.drawText(_devCenter, 325, Graphics.FONT_SMALL, _dataFields.getSteps(), Graphics.TEXT_JUSTIFY_CENTER);
-    //dc.drawRectangle(155, 325, 80, 50);
-  }
-
-  (:fr255)
-  function onUpdate(dc as Dc) as Void {
-    //System.println("onUpdate");
-    clearScreen(dc);
-
-    if (_hidden) {
-      //System.println("low power mode");
-      if (_settings.battLogEnabled) {
-        _dataFields.getBattery();
-      }
-      return;
-    }
-    
-    // lines for positioning
-    //if (_settings.showGrid) {
-      //drawGrid(dc);
-    //}
-
-    // Get the date info, the strings will be localized.
-    var dateInfo = Gregorian.info(Time.now(), Time.FORMAT_MEDIUM);
-            
-    // hour
-    dc.setColor(_settings.hourColor, 0);
-    dc.drawText(_devCenter, 52, _timeFont, dateInfo.hour.format("%02d"), Graphics.TEXT_JUSTIFY_CENTER);
-
-    // minute
-    dc.setColor(_settings.minuteColor, 0);
-    dc.drawText(_devCenter, 156, _timeFont, dateInfo.min.format("%02d"), Graphics.TEXT_JUSTIFY_CENTER);
-
-    // phone connected
-    if (System.getDeviceSettings().phoneConnected) {
-      dc.setColor(_settings.connectColor, 0);
-      dc.drawText(40, _devCenter, Graphics.FONT_SMALL, "B", Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
-    }
-
-    // date
-    dc.setColor(_settings.dateColor, 0);
-    var date = Lang.format("$1$ $2$ $3$", [dateInfo.day_of_week, dateInfo.day, dateInfo.month]);
-    dc.drawText(_devCenter, _devCenter, Graphics.FONT_SMALL, date, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
-
-    if (_lowPwrMode) {
-      // battery
-      dc.setColor(_settings.battColor, 0);
-      dc.drawText(_devCenter, 220, Graphics.FONT_SMALL, _dataFields.getBattery(), Graphics.TEXT_JUSTIFY_CENTER);
-      return;
-    }
-
-    // altitude
-    dc.setColor(_settings.altitudeColor, 0);
-    dc.drawText(_devCenter, 10, Graphics.FONT_SMALL, _dataFields.getAltitude(), Graphics.TEXT_JUSTIFY_CENTER);
+    dc.drawText(210, 115, Graphics.FONT_SMALL, "ST: " + _dataFields.getSteps(), Graphics.TEXT_JUSTIFY_LEFT);
 
     // seconds
-    dc.setColor(_settings.secColor, 0);
-    dc.drawText(220, _devCenter, Graphics.FONT_SMALL, dateInfo.sec.format("%02d"), Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
-
-    // recovery time
-    dc.setColor(_settings.recoveryColor, 0);
-    dc.drawText(40, 60, Graphics.FONT_SMALL, _dataFields.getRecoveryTime(), Graphics.TEXT_JUSTIFY_CENTER);
-
-    // heart rate
-    dc.setColor(_settings.hrColor, 0);
-    dc.drawText(220, 60, Graphics.FONT_SMALL, _dataFields.getHeartRate(), Graphics.TEXT_JUSTIFY_CENTER);
+    dc.drawText(210, _devCenter, Graphics.FONT_SMALL, dateInfo.sec.format("%02d"), Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER);
 
     // body battery
-    dc.setColor(_settings.bodyBattColor, 0);
-    dc.drawText(40, 165, Graphics.FONT_SMALL, _dataFields.getBodyBattery(), Graphics.TEXT_JUSTIFY_CENTER);
+    dc.drawText(210, 230, Graphics.FONT_SMALL, "BB: " + _dataFields.getBodyBattery(), Graphics.TEXT_JUSTIFY_LEFT);
     
-    // battery
-    dc.setColor(_settings.battColor, 0);
-    dc.drawText(220, 165, Graphics.FONT_SMALL, _dataFields.getBattery(), Graphics.TEXT_JUSTIFY_CENTER);
-    
-    // steps
-    dc.setColor(_settings.stepsColor, 0);
-    dc.drawText(_devCenter, 220, Graphics.FONT_SMALL, _dataFields.getSteps(), Graphics.TEXT_JUSTIFY_CENTER);
-  }
+    // recovery time
+    dc.drawText(210, 270, Graphics.FONT_SMALL, "RT: " + _dataFields.getRecoveryTime(), Graphics.TEXT_JUSTIFY_LEFT);
 
+    // battery
+    dc.drawText(_devCenter, 345, Graphics.FONT_SMALL, _dataFields.getBattery(), Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+    //dc.drawRectangle(145, 320, 100, 50);
+  }
+  
   (:debug)
   private function clearScreen(dc as Dc) {
     dc.setColor(0, _settings.bgColor);
