@@ -33,8 +33,10 @@ class WatchFaceView extends WatchUi.WatchFace {
 
     if (_settings.timeFont == 0) {
       _timeFont = WatchUi.loadResource(Rez.Fonts.id_rajdhani_bold_mono);
-    } else {
+    } else if (_settings.timeFont == 1) {
       _timeFont = WatchUi.loadResource(Rez.Fonts.id_saira_outline);
+    } else {
+      _timeFont = WatchUi.loadResource(Rez.Fonts.id_saira_thin);
     }
   }
 

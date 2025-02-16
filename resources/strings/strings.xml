@@ -8,9 +8,9 @@
     <string id="TextColorNightTitle">Text Color Night</string>
     <string id="TextColorSleepTitle">Text Color Sleep</string>
     <string id="TimeFontTitle">Time Font</string>
-    <string id="TimeFontRajdhani">Rajdhani</string>
-    <string id="TimeFontPoppins">Poppins</string>
-    <string id="TimeFontSourceSansPro">SourceSansPro</string>
+    <string id="TimeFont_01">Rajdhani</string>
+    <string id="TimeFont_02">Saira Outline</string>
+    <string id="TimeFont_03">Saira Thin</string>
     <string id="DateColorTitle">Date Color</string>
     <string id="HRColorTitle">Heart Rate Color</string>
     <string id="ConnectColorTitle">Connection  Color</string>

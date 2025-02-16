@@ -35,9 +35,9 @@
     </setting>
     <setting propertyKey="@Properties.TimeFont" title="@Strings.TimeFontTitle">
         <settingConfig type="list">
-            <listEntry value="0">@Strings.TimeFontSourceSansPro</listEntry>
-            <listEntry value="1">@Strings.TimeFontPoppins</listEntry>
-            <listEntry value="2">@Strings.TimeFontRajdhani</listEntry>
+            <listEntry value="0">@Strings.TimeFont_01</listEntry>
+            <listEntry value="1">@Strings.TimeFont_02</listEntry>
+            <listEntry value="2">@Strings.TimeFont_03</listEntry>
         </settingConfig>
     </setting>
     <setting propertyKey="@Properties.DateColor" title="@Strings.DateColorTitle">
