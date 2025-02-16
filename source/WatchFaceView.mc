@@ -32,11 +32,9 @@ class WatchFaceView extends WatchUi.WatchFace {
     _settings.loadSettings();
 
     if (_settings.timeFont == 0) {
-      _timeFont = WatchUi.loadResource(Rez.Fonts.id_saira_outline);
-    } else if (_settings.timeFont == 1) {
-      _timeFont = WatchUi.loadResource(Rez.Fonts.id_poppins_bold);
-    } else {
       _timeFont = WatchUi.loadResource(Rez.Fonts.id_rajdhani_bold_mono);
+    } else {
+      _timeFont = WatchUi.loadResource(Rez.Fonts.id_saira_outline);
     }
   }
 
@@ -173,19 +171,19 @@ class WatchFaceView extends WatchUi.WatchFace {
     dc.drawText(100, _devCenter, Graphics.FONT_SMALL, date, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
 
     // heart rate
-    dc.drawText(210, 75, Graphics.FONT_SMALL, "HR: " + _dataFields.getHeartRate(), Graphics.TEXT_JUSTIFY_LEFT);
+    dc.drawText(210, 75, Graphics.FONT_SMALL, "HR " + _dataFields.getHeartRate(), Graphics.TEXT_JUSTIFY_LEFT);
 
     // steps
-    dc.drawText(210, 115, Graphics.FONT_SMALL, "ST: " + _dataFields.getSteps(), Graphics.TEXT_JUSTIFY_LEFT);
+    dc.drawText(210, 115, Graphics.FONT_SMALL, "ST " + _dataFields.getSteps(), Graphics.TEXT_JUSTIFY_LEFT);
 
     // seconds
     dc.drawText(210, _devCenter, Graphics.FONT_SMALL, dateInfo.sec.format("%02d"), Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER);
 
     // body battery
-    dc.drawText(210, 230, Graphics.FONT_SMALL, "BB: " + _dataFields.getBodyBattery(), Graphics.TEXT_JUSTIFY_LEFT);
+    dc.drawText(210, 230, Graphics.FONT_SMALL, "BB " + _dataFields.getBodyBattery(), Graphics.TEXT_JUSTIFY_LEFT);
     
     // recovery time
-    dc.drawText(210, 270, Graphics.FONT_SMALL, "RT: " + _dataFields.getRecoveryTime(), Graphics.TEXT_JUSTIFY_LEFT);
+    dc.drawText(210, 270, Graphics.FONT_SMALL, "RT " + _dataFields.getRecoveryTime(), Graphics.TEXT_JUSTIFY_LEFT);
 
     // battery
     dc.drawText(_devCenter, 345, Graphics.FONT_SMALL, _dataFields.getBattery(), Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
