@@ -36,7 +36,7 @@ class WatchFaceView extends WatchUi.WatchFace {
     } else if (_settings.timeFont == 1) {
       _timeFont = WatchUi.loadResource(Rez.Fonts.id_saira_outline);
     } else {
-      _timeFont = WatchUi.loadResource(Rez.Fonts.id_saira_thin);
+      _timeFont = WatchUi.loadResource(Rez.Fonts.id_saira_reg);
     }
   }
 
@@ -123,9 +123,9 @@ class WatchFaceView extends WatchUi.WatchFace {
     }
 
     // lines for positioning
-    /*if (_settings.showGrid) {
-      drawGrid(dc);
-    }*/
+    // if (_settings.showGrid) {
+    //   drawGrid(dc);
+    // }
 
     // Get the date info, the strings will be localized.
     var dateInfo = Gregorian.info(Time.now(), Time.FORMAT_MEDIUM);
@@ -158,7 +158,7 @@ class WatchFaceView extends WatchUi.WatchFace {
     //dc.drawRectangle(160, 10, 80, 50);
 
     // hour
-    dc.drawText(110, 80, _timeFont, dateInfo.hour.format("%02d"), Graphics.TEXT_JUSTIFY_CENTER);
+    dc.drawText(110, 85, _timeFont, dateInfo.hour.format("%02d"), Graphics.TEXT_JUSTIFY_CENTER);
 
     // minute
     dc.drawText(110, 235, _timeFont, dateInfo.min.format("%02d"), Graphics.TEXT_JUSTIFY_CENTER);
@@ -169,8 +169,8 @@ class WatchFaceView extends WatchUi.WatchFace {
     }
 
     // date
-    var date = Lang.format("$1$ $2$ $3$", [dateInfo.day_of_week, dateInfo.day, dateInfo.month]);
-    dc.drawText(100, _devCenter, Graphics.FONT_SMALL, date, Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+    var date = Lang.format("$1$ $2$", [dateInfo.day_of_week, dateInfo.day]);
+    dc.drawText(45, _devCenter, Graphics.FONT_SMALL, date, Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER);
 
     // heart rate
     dc.drawText(210, 75, Graphics.FONT_SMALL, "HR " + _dataFields.getHeartRate(), Graphics.TEXT_JUSTIFY_LEFT);
@@ -188,7 +188,7 @@ class WatchFaceView extends WatchUi.WatchFace {
     dc.drawText(210, 270, Graphics.FONT_SMALL, "RT " + _dataFields.getRecoveryTime(), Graphics.TEXT_JUSTIFY_LEFT);
 
     // battery
-    dc.drawText(_devCenter, 345, Graphics.FONT_SMALL, _dataFields.getBattery(), Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+    dc.drawText(_devCenter, 350, Graphics.FONT_SMALL, _dataFields.getBattery(), Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
     //dc.drawRectangle(145, 320, 100, 50);
   }
   
