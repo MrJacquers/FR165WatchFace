@@ -83,7 +83,6 @@ class WatchFaceView extends WatchUi.WatchFace {
   // Updates the View:
   // Called once a minute in low power mode.
   // Called every second in high power mode, e.g. after a gesture, for a couple of seconds.
-  (:fr165m)
   function onUpdate(dc as Dc) as Void {
     //System.println("onUpdate");
     clearScreen(dc);
