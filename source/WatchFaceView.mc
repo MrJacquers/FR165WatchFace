@@ -7,6 +7,7 @@ import Toybox.Time.Gregorian;
 class WatchFaceView extends WatchUi.WatchFace {
   private var _devSize;
   private var _devCenter;
+  private var _iconFont;
   private var _timeFont;
   private var _hidden;
   private var _lowPwrMode;
@@ -30,6 +31,8 @@ class WatchFaceView extends WatchUi.WatchFace {
     }
     
     _settings.loadSettings();
+
+    _iconFont = WatchUi.loadResource(Rez.Fonts.id_icons);
 
     if (_settings.timeFont == 0) {
       _timeFont = WatchUi.loadResource(Rez.Fonts.id_rajdhani_bold_mono);
@@ -132,6 +135,11 @@ class WatchFaceView extends WatchUi.WatchFace {
     // sleep mode display
     if (dateInfo.hour > 21 || dateInfo.hour < 6) {
       dc.setColor(_settings.textColorSleep, _settings.bgColor);
+
+      // phone connected
+      if (System.getDeviceSettings().phoneConnected) {
+        dc.drawText(_devCenter, 40, _iconFont, "b", Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+      }
       
       // date
       var date = Lang.format("$1$ $2$ $3$", [dateInfo.day_of_week, dateInfo.day, dateInfo.month]);
@@ -164,7 +172,7 @@ class WatchFaceView extends WatchUi.WatchFace {
 
     // phone connected
     if (System.getDeviceSettings().phoneConnected) {
-      dc.drawText(_devCenter, 40, Graphics.FONT_SMALL, "B", Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+      dc.drawText(_devCenter, 40, _iconFont, "b", Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
     }
 
     // date
@@ -172,19 +180,23 @@ class WatchFaceView extends WatchUi.WatchFace {
     dc.drawText(45, _devCenter, Graphics.FONT_SMALL, date, Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER);
 
     // heart rate
-    dc.drawText(210, 75, Graphics.FONT_SMALL, "HR " + _dataFields.getHeartRate(), Graphics.TEXT_JUSTIFY_LEFT);
+    dc.drawText(210, 80, _iconFont, "h", Graphics.TEXT_JUSTIFY_LEFT);
+    dc.drawText(260, 75, Graphics.FONT_SMALL, _dataFields.getHeartRate(), Graphics.TEXT_JUSTIFY_LEFT);
 
     // steps
-    dc.drawText(210, 115, Graphics.FONT_SMALL, "ST " + _dataFields.getSteps(), Graphics.TEXT_JUSTIFY_LEFT);
+    dc.drawText(210, 120, _iconFont, "s", Graphics.TEXT_JUSTIFY_LEFT);
+    dc.drawText(260, 115, Graphics.FONT_SMALL, _dataFields.getSteps(), Graphics.TEXT_JUSTIFY_LEFT);
 
     // seconds
     dc.drawText(210, _devCenter, Graphics.FONT_SMALL, dateInfo.sec.format("%02d"), Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER);
 
     // body battery
-    dc.drawText(210, 230, Graphics.FONT_SMALL, "BB " + _dataFields.getBodyBattery(), Graphics.TEXT_JUSTIFY_LEFT);
+    dc.drawText(210, 235, _iconFont, "e", Graphics.TEXT_JUSTIFY_LEFT);
+    dc.drawText(260, 230, Graphics.FONT_SMALL, _dataFields.getBodyBattery(), Graphics.TEXT_JUSTIFY_LEFT);
     
     // recovery time
-    dc.drawText(210, 270, Graphics.FONT_SMALL, "RT " + _dataFields.getRecoveryTime(), Graphics.TEXT_JUSTIFY_LEFT);
+    dc.drawText(210, 275, _iconFont, "r", Graphics.TEXT_JUSTIFY_LEFT);
+    dc.drawText(260, 270, Graphics.FONT_SMALL, _dataFields.getRecoveryTime(), Graphics.TEXT_JUSTIFY_LEFT);
 
     // battery
     dc.drawText(_devCenter, 350, Graphics.FONT_SMALL, _dataFields.getBattery(), Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);

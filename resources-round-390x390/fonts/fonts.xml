@@ -2,4 +2,5 @@
     <font id="id_rajdhani_bold_mono" filename="rajdhani_bold_mono_outline_112.fnt" antialias="true" filter="0123456789:" />
     <font id="id_saira_outline" filename="saira_exp_bold_outline_96.fnt" antialias="true" filter="0123456789:" />
     <font id="id_saira_reg" filename="saira_exp_reg_96.fnt" antialias="true" filter="0123456789:" />
+    <font id="id_icons" filename="icons_36.fnt" antialias="true" filter="behsr" />
 </fonts>
