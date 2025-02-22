@@ -23,8 +23,8 @@ class WatchDelegate extends WatchFaceDelegate {
       return true;
     }
 
-    // dc.drawRectangle(145, 320, 100, 50);
-    if (x >= 145 && y >= 320 && x <= 245 && y <= 370) {
+    // dc.drawRectangle(200, 270, 90, 50);
+    if (x >= 200 && y >= 270 && x <= 290 && y <= 320) {
       //System.println("onPress: battery");
       ShowBatteryHistory = true;
       return true;

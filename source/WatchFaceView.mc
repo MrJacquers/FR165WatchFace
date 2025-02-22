@@ -124,11 +124,6 @@ class WatchFaceView extends WatchUi.WatchFace {
       return;
     }
 
-    // lines for positioning
-    // if (_settings.showGrid) {
-    //   drawGrid(dc);
-    // }
-
     // Get the date info, the strings will be localized.
     var dateInfo = Gregorian.info(Time.now(), Time.FORMAT_MEDIUM);
 
@@ -154,16 +149,15 @@ class WatchFaceView extends WatchUi.WatchFace {
       // heart rate and battery
       dc.drawText(_devCenter, 260, Graphics.FONT_SMALL, _dataFields.getHeartRate() + "   " +  _dataFields.getBattery(), Graphics.TEXT_JUSTIFY_CENTER);
 
+      // lines for positioning   
+      drawGrid(dc);
+
       return;
     }
 
-    // Set the foreground color.
+    // foreground color
     dc.setColor(dateInfo.hour < 18 ? _settings.textColorDay : _settings.textColorNight, _settings.bgColor);
-
-    // altitude
-    //dc.drawText(_devCenter, 15, Graphics.FONT_SMALL, _dataFields.getAltitude(), Graphics.TEXT_JUSTIFY_CENTER);
-    //dc.drawRectangle(160, 10, 80, 50);
-
+    
     // hour
     dc.drawText(110, 85, _timeFont, dateInfo.hour.format("%02d"), Graphics.TEXT_JUSTIFY_CENTER);
 
@@ -172,7 +166,7 @@ class WatchFaceView extends WatchUi.WatchFace {
 
     // phone connected
     if (System.getDeviceSettings().phoneConnected) {
-      dc.drawText(_devCenter, 40, _iconFont, "b", Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+      dc.drawText(285, _devCenter, _iconFont, "b", Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
     }
 
     // date
@@ -181,26 +175,25 @@ class WatchFaceView extends WatchUi.WatchFace {
 
     // heart rate
     dc.drawText(210, 80, _iconFont, "h", Graphics.TEXT_JUSTIFY_LEFT);
-    dc.drawText(260, 75, Graphics.FONT_SMALL, _dataFields.getHeartRate(), Graphics.TEXT_JUSTIFY_LEFT);
+    dc.drawText(255, 75, Graphics.FONT_SMALL, _dataFields.getHeartRate(), Graphics.TEXT_JUSTIFY_LEFT);
 
     // steps
     dc.drawText(210, 120, _iconFont, "s", Graphics.TEXT_JUSTIFY_LEFT);
-    dc.drawText(260, 115, Graphics.FONT_SMALL, _dataFields.getSteps(), Graphics.TEXT_JUSTIFY_LEFT);
+    dc.drawText(255, 115, Graphics.FONT_SMALL, _dataFields.getSteps(), Graphics.TEXT_JUSTIFY_LEFT);
 
     // seconds
     dc.drawText(210, _devCenter, Graphics.FONT_SMALL, dateInfo.sec.format("%02d"), Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER);
 
-    // body battery
-    dc.drawText(210, 235, _iconFont, "e", Graphics.TEXT_JUSTIFY_LEFT);
-    dc.drawText(260, 230, Graphics.FONT_SMALL, _dataFields.getBodyBattery(), Graphics.TEXT_JUSTIFY_LEFT);
-    
     // recovery time
-    dc.drawText(210, 275, _iconFont, "r", Graphics.TEXT_JUSTIFY_LEFT);
-    dc.drawText(260, 270, Graphics.FONT_SMALL, _dataFields.getRecoveryTime(), Graphics.TEXT_JUSTIFY_LEFT);
-
+    dc.drawText(210, 235, _iconFont, "r", Graphics.TEXT_JUSTIFY_LEFT);
+    dc.drawText(255, 230, Graphics.FONT_SMALL, _dataFields.getRecoveryTime(), Graphics.TEXT_JUSTIFY_LEFT);
+    
     // battery
-    dc.drawText(_devCenter, 350, Graphics.FONT_SMALL, _dataFields.getBattery(), Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
-    //dc.drawRectangle(145, 320, 100, 50);
+    dc.drawText(210, 270, Graphics.FONT_SMALL, _dataFields.getBattery(), Graphics.TEXT_JUSTIFY_LEFT);
+    //dc.drawRectangle(200, 270, 90, 50);
+
+    // lines for positioning
+    drawGrid(dc);    
   }
   
   (:debug)
@@ -214,8 +207,12 @@ class WatchFaceView extends WatchUi.WatchFace {
     // no need for this on actual device
   }
 
-  // for layout position development
+  // lines for layout positioning
   private function drawGrid(dc as Dc) {
+    if (!_settings.showGrid) {
+      return;
+    }
+
     var i = 0;
     var gapSize = _devSize / 20.0;
 
