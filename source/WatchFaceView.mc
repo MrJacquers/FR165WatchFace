@@ -9,6 +9,7 @@ class WatchFaceView extends WatchUi.WatchFace {
   private var _devCenter;
   private var _iconFont;
   private var _timeFont;
+  private var _timeFontSleep;
   private var _hidden;
   private var _lowPwrMode;
   private var _settings;
@@ -41,6 +42,8 @@ class WatchFaceView extends WatchUi.WatchFace {
     } else {
       _timeFont = WatchUi.loadResource(Rez.Fonts.id_saira_reg);
     }
+
+    _timeFontSleep = WatchUi.loadResource(Rez.Fonts.id_saira_outline);
   }
 
   function onLayout(dc as Dc) as Void {
@@ -141,10 +144,10 @@ class WatchFaceView extends WatchUi.WatchFace {
       dc.drawText(_devCenter, 85, Graphics.FONT_SMALL, date, Graphics.TEXT_JUSTIFY_CENTER);
       
       // hour
-      dc.drawText(_devCenter - 5, _devCenter, _timeFont, dateInfo.hour.format("%02d"), Graphics.TEXT_JUSTIFY_RIGHT | Graphics.TEXT_JUSTIFY_VCENTER);
+      dc.drawText(_devCenter - 5, _devCenter, _timeFontSleep, dateInfo.hour.format("%02d"), Graphics.TEXT_JUSTIFY_RIGHT | Graphics.TEXT_JUSTIFY_VCENTER);
       
       // minute
-      dc.drawText(_devCenter + 5, _devCenter, _timeFont, dateInfo.min.format("%02d"), Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER);
+      dc.drawText(_devCenter + 5, _devCenter, _timeFontSleep, dateInfo.min.format("%02d"), Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER);
 
       // heart rate and battery
       dc.drawText(_devCenter, 260, Graphics.FONT_SMALL, _dataFields.getHeartRate() + "   " +  _dataFields.getBattery(), Graphics.TEXT_JUSTIFY_CENTER);
