@@ -127,15 +127,18 @@ class WatchFaceView extends WatchUi.WatchFace {
       return;
     }
 
+    // get the device settings
+    var deviceSettings = System.getDeviceSettings();
+
     // Get the date info, the strings will be localized.
     var dateInfo = Gregorian.info(Time.now(), Time.FORMAT_MEDIUM);
 
-    // sleep mode display
-    if (dateInfo.hour > 21 || dateInfo.hour < 6) {
+    // dnd (sleep mode) display
+    if (deviceSettings.doNotDisturb) {
       dc.setColor(_settings.textColorSleep, _settings.bgColor);
 
       // phone connected
-      if (System.getDeviceSettings().phoneConnected) {
+      if (deviceSettings.phoneConnected) {
         dc.drawText(_devCenter, 40, _iconFont, "b", Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
       }
       
@@ -168,7 +171,7 @@ class WatchFaceView extends WatchUi.WatchFace {
     dc.drawText(110, 235, _timeFont, dateInfo.min.format("%02d"), Graphics.TEXT_JUSTIFY_CENTER);
 
     // phone connected
-    if (System.getDeviceSettings().phoneConnected) {
+    if (deviceSettings.phoneConnected) {
       dc.drawText(285, _devCenter, _iconFont, "b", Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
     }
 
