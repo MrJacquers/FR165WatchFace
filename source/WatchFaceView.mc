@@ -9,14 +9,14 @@ class WatchFaceView extends WatchUi.WatchFace {
   private var _devCenter;
   private var _iconFont;
   private var _timeFont;
-  private var _timeFontSleep;
   private var _hidden;
   private var _lowPwrMode;
   private var _settings;
   private var _dataFields;
+  private var _isDay = true;
 
   function initialize() {
-    //System.println("view initialize");
+    //System.println("view.initialize");
     WatchFace.initialize();
 
     loadSettings();
@@ -42,8 +42,6 @@ class WatchFaceView extends WatchUi.WatchFace {
     } else {
       _timeFont = WatchUi.loadResource(Rez.Fonts.id_saira_reg);
     }
-
-    _timeFontSleep = WatchUi.loadResource(Rez.Fonts.id_saira_outline);
   }
 
   function onLayout(dc as Dc) as Void {
@@ -59,6 +57,7 @@ class WatchFaceView extends WatchUi.WatchFace {
     //System.println("onShow");
     _hidden = false;
     _lowPwrMode = false;
+    checkIfDayOrNight();
     //_dataFields.subscribeComplications();
   }
 
@@ -82,6 +81,7 @@ class WatchFaceView extends WatchUi.WatchFace {
   function onExitSleep() as Void {
     //System.println("onExitSleep");
     _lowPwrMode = false;
+    checkIfDayOrNight();
     //_dataFields.subscribeComplications();
     //WatchUi.requestUpdate(); // not really required, onUpdate will be called anyway.
   }
@@ -147,22 +147,21 @@ class WatchFaceView extends WatchUi.WatchFace {
       dc.drawText(_devCenter, 85, Graphics.FONT_SMALL, date, Graphics.TEXT_JUSTIFY_CENTER);
       
       // hour
-      dc.drawText(_devCenter - 5, _devCenter, _timeFontSleep, dateInfo.hour.format("%02d"), Graphics.TEXT_JUSTIFY_RIGHT | Graphics.TEXT_JUSTIFY_VCENTER);
+      dc.drawText(_devCenter - 5, _devCenter, _timeFont, dateInfo.hour.format("%02d"), Graphics.TEXT_JUSTIFY_RIGHT | Graphics.TEXT_JUSTIFY_VCENTER);
       
       // minute
-      dc.drawText(_devCenter + 5, _devCenter, _timeFontSleep, dateInfo.min.format("%02d"), Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER);
+      dc.drawText(_devCenter + 5, _devCenter, _timeFont, dateInfo.min.format("%02d"), Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER);
 
       // heart rate and battery
       dc.drawText(_devCenter, 260, Graphics.FONT_SMALL, _dataFields.getHeartRate() + "   " +  _dataFields.getBattery(), Graphics.TEXT_JUSTIFY_CENTER);
 
       // lines for positioning   
       drawGrid(dc);
-
       return;
     }
 
     // foreground color
-    dc.setColor(dateInfo.hour < 18 ? _settings.textColorDay : _settings.textColorNight, _settings.bgColor);
+    dc.setColor(_isDay ? _settings.textColorDay : _settings.textColorNight, _settings.bgColor);
     
     // hour
     dc.drawText(110, 85, _timeFont, dateInfo.hour.format("%02d"), Graphics.TEXT_JUSTIFY_CENTER);
@@ -200,6 +199,41 @@ class WatchFaceView extends WatchUi.WatchFace {
 
     // lines for positioning
     drawGrid(dc);    
+  }
+
+  private function checkIfDayOrNight() {
+    var now = Time.now();
+    var location = Activity.getActivityInfo().currentLocation;
+
+    if (location == null) {
+      // get last known location from storage
+      var latitude = Settings.getStorageValue("LastLocationLat", null);
+      var longitude = Settings.getStorageValue("LastLocationLon", null);
+      if (latitude != null && longitude != null) {
+        location = new Position.Location({ :latitude => latitude, :longitude => longitude, :format => :degrees });
+      }
+    }
+
+    if (location != null) {
+      // save in storage
+      var locationInfo = location.toDegrees();			
+			Settings.setStorageValue("LastLocationLat", locationInfo[0]);
+			Settings.setStorageValue("LastLocationLon", locationInfo[1]);
+
+      // get sunrise and sunset times
+      var sunrise = Weather.getSunrise(location, now);
+      var sunset = Weather.getSunset(location, now);
+      //var sunriseInfo = Gregorian.info(sunrise, Time.FORMAT_MEDIUM);
+      //var sunsetInfo = Gregorian.info(sunset, Time.FORMAT_MEDIUM);
+
+      // check if it's day or night
+      _isDay = now.value() >= sunrise.value() && now.value() <= sunset.value();
+      return;
+    }
+    
+    // no location info, use default values
+    var dateInfo = Gregorian.info(now, Time.FORMAT_SHORT);
+    _isDay = dateInfo.hour > 5 && dateInfo.hour < 18;
   }
   
   (:debug)

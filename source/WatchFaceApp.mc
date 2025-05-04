@@ -9,13 +9,13 @@ class WatchFaceApp extends Application.AppBase {
     private var _faceView = null;
 
     function initialize() {
-        //System.println("app initialize");
+        //System.println("app.initialize");
         AppBase.initialize();
     }
 
     // onStart() is called on application start up
     function onStart(state as Dictionary?) as Void {
-        //System.println("app onStart");
+        //System.println("app.onStart");
 
         //Settings.setValue("BatteryLevelHistory", "");
         //Settings.setValue("BatteryLevelHistory", "01 10:15 50");
@@ -34,7 +34,7 @@ class WatchFaceApp extends Application.AppBase {
 
     // onStop() is called when your application is exiting
     function onStop(state as Dictionary?) as Void {
-        //System.println("app onStop");
+        //System.println("app.onStop");
     }
 
     // Return the initial view of your application here

@@ -56,15 +56,15 @@ class Settings {
 
     static function getStorageValue(name, defaultValue) {
         var value = Storage.getValue(name);
-
         if (value == null || value.equals("") || value.equals("null")) {
             return defaultValue;
-        }
-        
+        }        
         return value;
     }
 
     static function setStorageValue(key, value) {
-        Storage.setValue(key, value);
+        if (Toybox.Application has :Storage) {
+            Storage.setValue(key, value);
+        }
     }
 }
