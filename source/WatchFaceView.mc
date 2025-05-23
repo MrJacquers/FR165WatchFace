@@ -110,7 +110,7 @@ class WatchFaceView extends WatchUi.WatchFace {
       }
 
       _dataFields.getBattery();
-      var history = Settings.getStorageValue("BatteryLevelHistory", "");
+      var history = Settings.getStorageValue("BatteryHistory", "");
       var entries = Utils.splitString(history, ",");
 
       if (entries.size() == 0) {

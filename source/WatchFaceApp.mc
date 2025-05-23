@@ -17,19 +17,11 @@ class WatchFaceApp extends Application.AppBase {
     function onStart(state as Dictionary?) as Void {
         //System.println("app.onStart");
 
-        //Settings.setValue("BatteryLevelHistory", "");
-        //Settings.setValue("BatteryLevelHistory", "01 10:15 50");
-
-        // get the battery level history
-        var history = Settings.getStorageValue("BatteryLevelHistory", "");
-        if (!history.equals("")) {
-            var entries = Utils.splitString(history, ",");
-            //System.println(entries.toString());
-            var last = entries[entries.size() - 1];
-            var parts = Utils.splitString(last, " ");
-            //System.println(parts.toString());
-            BatteryLevel = parts[parts.size() -1].toNumber();
-        }
+        //Settings.setValue("BatteryHistory", "");
+        //Settings.setValue("BatteryHistory", "01 10:15 50");
+        var dataFields = new DataFields();
+        BatteryLevel = dataFields.getBatteryFromHistory();
+        //System.println("BatteryLevel: " + BatteryLevel);
     }
 
     // onStop() is called when your application is exiting

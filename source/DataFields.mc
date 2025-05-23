@@ -16,7 +16,7 @@ class DataFields {
         if (Toybox has :Complications == false) {
             return;
         }
-        
+
         _altitudeId = new Complications.Id(Complications.COMPLICATION_TYPE_ALTITUDE);
         _bodyBatteryId = new Complications.Id(Complications.COMPLICATION_TYPE_BODY_BATTERY);
         _recoveryTimeId = new Complications.Id(Complications.COMPLICATION_TYPE_RECOVERY_TIME);
@@ -32,7 +32,7 @@ class DataFields {
             Complications.subscribeToUpdates(_bodyBatteryId);
         }
 
-        if (_recoveryTimeId!= null) {
+        if (_recoveryTimeId != null) {
             Complications.subscribeToUpdates(_recoveryTimeId);
         }
     }
@@ -78,13 +78,13 @@ class DataFields {
     }
 
     function getBodyBattery() {
-        var comp = Complications.getComplication(_bodyBatteryId);        
+        var comp = Complications.getComplication(_bodyBatteryId);
         if (comp.value != null) {
             return comp.value;
         }
         return "--";
     }
-    
+
     function getSteps() {
         return ActivityMonitor.getInfo().steps;
     }
@@ -97,7 +97,7 @@ class DataFields {
         return "--";
     }
 
-     function getAltitude() {
+    function getAltitude() {
         var comp = Complications.getComplication(_altitudeId);
         if (comp.value != null) {
             return comp.value;
@@ -110,33 +110,54 @@ class DataFields {
         var battery = System.getSystemStats().battery;
 
         if (battLogEnabled && battery != BatteryLevel) {
+            // update the global battery level
             BatteryLevel = battery;
 
             // get the battery level history
-            var history = Settings.getStorageValue("BatteryLevelHistory", "");
+            var history = Settings.getStorageValue("BatteryHistory", "");
             //System.println("history: " + history);
-                        
+
             // add the battery level to the history
             var dateInfo = Gregorian.info(Time.now(), Time.FORMAT_SHORT);
-            history += Lang.format("$1$ $2$:$3$ $4$,", [dateInfo.day.format("%02d"), dateInfo.hour.format("%02d"), dateInfo.min.format("%02d"), battery.format("%02d")]);
+            history += Lang.format("$1$ $2$:$3$ $4$,", [
+                dateInfo.day.format("%02d"),
+                dateInfo.hour.format("%02d"),
+                dateInfo.min.format("%02d"),
+                battery.format("%02d"),
+            ]);
 
-            // split the history into entries
-            var entries = Utils.splitString(history, ",");
-            //System.println("entries: " + entries.toString());
-
-            var maxToKeep = 10;
-            if (entries.size() > maxToKeep) {
-                history = "";
-                for (var i = entries.size() - maxToKeep; i < entries.size(); i++) {
-                    history += entries[i] + ",";
-                }
-            }
-
-            // save the history
-            Settings.setStorageValue("BatteryLevelHistory", history);
+            // save the battery level history
+            saveHistory(history, "BatteryHistory");
         }
 
-        //return battery.format("%.2f") + "%";
         return Lang.format("$1$%", [battery.format("%d")]);
+    }
+
+    function getBatteryFromHistory() {
+        var batteryHistory = Settings.getStorageValue("BatteryHistory", "");
+        var entries = Utils.splitString(batteryHistory, ",");
+        if (entries.size() == 0) {
+            return 0;
+        }
+        var last = entries[entries.size() - 1];
+        var parts = Utils.splitString(last, " ");
+        return parts[parts.size() - 1].toNumber();
+    }
+
+    function saveHistory(history as String, storageKey as String) {
+        // split the history into entries
+        var entries = Utils.splitString(history, ",");
+        //System.println("entries: " + entries.toString());
+
+        var maxToKeep = 10;
+        if (entries.size() > maxToKeep) {
+            history = "";
+            for (var i = entries.size() - maxToKeep; i < entries.size(); i++) {
+                history += entries[i] + ",";
+            }
+        }
+
+        // save the history
+        Settings.setStorageValue(storageKey, history);
     }
 }
