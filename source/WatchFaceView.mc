@@ -14,6 +14,11 @@ class WatchFaceView extends WatchUi.WatchFace {
   private var _settings;
   private var _dataFields;
   private var _isDay = true;
+  private var _sunriseInfo;
+  private var _sunsetInfo;
+  private var _recoveryTime;
+  private var _steps;
+  private var _battery;
 
   function initialize() {
     //System.println("view.initialize");
@@ -33,15 +38,17 @@ class WatchFaceView extends WatchUi.WatchFace {
     
     _settings.loadSettings();
 
-    _iconFont = WatchUi.loadResource(Rez.Fonts.id_icons);
+    _iconFont = WatchUi.loadResource(Rez.Fonts.icons);
 
-    if (_settings.timeFont == 0) {
-      _timeFont = WatchUi.loadResource(Rez.Fonts.id_rajdhani_bold_mono);
+    /*if (_settings.timeFont == 0) {
+      _timeFont = WatchUi.loadResource(Rez.Fonts.rajdhani_bold_mono);
     } else if (_settings.timeFont == 1) {
-      _timeFont = WatchUi.loadResource(Rez.Fonts.id_saira_outline);
+      _timeFont = WatchUi.loadResource(Rez.Fonts.saira_outline);
     } else {
-      _timeFont = WatchUi.loadResource(Rez.Fonts.id_saira_reg);
-    }
+      _timeFont = WatchUi.loadResource(Rez.Fonts.saira_reg);
+    }*/
+
+    _timeFont = WatchUi.loadResource(Rez.Fonts.oxanium_outline);
   }
 
   function onLayout(dc as Dc) as Void {
@@ -57,7 +64,13 @@ class WatchFaceView extends WatchUi.WatchFace {
     //System.println("onShow");
     _hidden = false;
     _lowPwrMode = false;
-    checkIfDayOrNight();
+
+    // get data that isn't updated frequently
+    _steps = _dataFields.getSteps();
+    _battery = _dataFields.getBattery();
+    _recoveryTime = _dataFields.getRecoveryTime();
+    getSunInfo();
+
     //_dataFields.subscribeComplications();
   }
 
@@ -81,7 +94,13 @@ class WatchFaceView extends WatchUi.WatchFace {
   function onExitSleep() as Void {
     //System.println("onExitSleep");
     _lowPwrMode = false;
-    checkIfDayOrNight();
+
+    // get data that isn't updated frequently
+    _steps = _dataFields.getSteps();
+    _battery = _dataFields.getBattery();
+    _recoveryTime = _dataFields.getRecoveryTime();
+    getSunInfo();
+
     //_dataFields.subscribeComplications();
     //WatchUi.requestUpdate(); // not really required, onUpdate will be called anyway.
   }
@@ -95,9 +114,10 @@ class WatchFaceView extends WatchUi.WatchFace {
 
     if (_hidden || _lowPwrMode) {
       //System.println("low power mode");
-      if (_settings.battLogEnabled) {
-        _dataFields.getBattery();
-      }
+      // it looks like onUpdate isn't called in hidden / low power mode when AOD is off, so this isn't needed.
+      // if (_settings.battLogEnabled) {
+      //   _dataFields.getBattery();
+      // }
       return;
     }
 
@@ -109,7 +129,6 @@ class WatchFaceView extends WatchUi.WatchFace {
         return;
       }
 
-      _dataFields.getBattery();
       var history = Settings.getStorageValue("BatteryHistory", "");
       var entries = Utils.splitString(history, ",");
 
@@ -143,7 +162,7 @@ class WatchFaceView extends WatchUi.WatchFace {
       }
       
       // date
-      var date = Lang.format("$1$ $2$ $3$", [dateInfo.day_of_week, dateInfo.day, dateInfo.month]);
+      var date = Lang.format("$1$ $2$ $3$", [dateInfo.day_of_week, dateInfo.day.format("%02d"), dateInfo.month]);
       dc.drawText(_devCenter, 85, Graphics.FONT_SMALL, date, Graphics.TEXT_JUSTIFY_CENTER);
       
       // hour
@@ -153,7 +172,7 @@ class WatchFaceView extends WatchUi.WatchFace {
       dc.drawText(_devCenter + 5, _devCenter, _timeFont, dateInfo.min.format("%02d"), Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER);
 
       // heart rate and battery
-      dc.drawText(_devCenter, 260, Graphics.FONT_SMALL, _dataFields.getHeartRate() + "   " +  _dataFields.getBattery(), Graphics.TEXT_JUSTIFY_CENTER);
+      dc.drawText(_devCenter, 260, Graphics.FONT_SMALL, _battery + "   " + _dataFields.getHeartRate(), Graphics.TEXT_JUSTIFY_CENTER);
 
       // lines for positioning   
       drawGrid(dc);
@@ -162,7 +181,12 @@ class WatchFaceView extends WatchUi.WatchFace {
 
     // foreground color
     dc.setColor(_isDay ? _settings.textColorDay : _settings.textColorNight, _settings.bgColor);
-    
+
+    if (_sunriseInfo != null) {
+      // sunrise info
+      dc.drawText(_devCenter, 15, Graphics.FONT_SMALL, _sunriseInfo.hour.format("%02d") + ":" + _sunriseInfo.min.format("%02d"), Graphics.TEXT_JUSTIFY_CENTER);
+    }
+
     // hour
     dc.drawText(110, 85, _timeFont, dateInfo.hour.format("%02d"), Graphics.TEXT_JUSTIFY_CENTER);
 
@@ -175,8 +199,8 @@ class WatchFaceView extends WatchUi.WatchFace {
     }
 
     // date
-    var date = Lang.format("$1$ $2$", [dateInfo.day_of_week, dateInfo.day]);
-    dc.drawText(45, _devCenter, Graphics.FONT_SMALL, date, Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER);
+    var date = Lang.format("$1$ $2$", [dateInfo.day_of_week, dateInfo.day.format("%02d")]);
+    dc.drawText(50, _devCenter, Graphics.FONT_SMALL, date, Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER);
 
     // heart rate
     dc.drawText(210, 80, _iconFont, "h", Graphics.TEXT_JUSTIFY_LEFT);
@@ -184,24 +208,32 @@ class WatchFaceView extends WatchUi.WatchFace {
 
     // steps
     dc.drawText(210, 120, _iconFont, "s", Graphics.TEXT_JUSTIFY_LEFT);
-    dc.drawText(255, 115, Graphics.FONT_SMALL, _dataFields.getSteps(), Graphics.TEXT_JUSTIFY_LEFT);
+    dc.drawText(255, 115, Graphics.FONT_SMALL, _steps, Graphics.TEXT_JUSTIFY_LEFT);
 
     // seconds
     dc.drawText(210, _devCenter, Graphics.FONT_SMALL, dateInfo.sec.format("%02d"), Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER);
 
     // recovery time
     dc.drawText(210, 235, _iconFont, "r", Graphics.TEXT_JUSTIFY_LEFT);
-    dc.drawText(255, 230, Graphics.FONT_SMALL, _dataFields.getRecoveryTime(), Graphics.TEXT_JUSTIFY_LEFT);
+    dc.drawText(255, 230, Graphics.FONT_SMALL, _recoveryTime, Graphics.TEXT_JUSTIFY_LEFT);
     
     // battery
-    dc.drawText(210, 270, Graphics.FONT_SMALL, _dataFields.getBattery(), Graphics.TEXT_JUSTIFY_LEFT);
+    dc.drawText(210, 270, Graphics.FONT_SMALL, _battery, Graphics.TEXT_JUSTIFY_LEFT);
     //dc.drawRectangle(200, 270, 90, 50);
+
+    if (_sunsetInfo != null) {
+      // sunset info
+      dc.drawText(_devCenter, 330, Graphics.FONT_SMALL, _sunsetInfo.hour.format("%02d") + ":" + _sunsetInfo.min.format("%02d"), Graphics.TEXT_JUSTIFY_CENTER);
+    }
 
     // lines for positioning
     drawGrid(dc);    
   }
 
-  private function checkIfDayOrNight() {
+  // Get sunrise and sunset times based on the current location.
+  // If the location is not available, use the last known location from storage.
+  // Also check if it's day or night based on the current time and sunrise/sunset times.  
+  private function getSunInfo() {
     var now = Time.now();
     var location = Activity.getActivityInfo().currentLocation;
 
@@ -223,8 +255,8 @@ class WatchFaceView extends WatchUi.WatchFace {
       // get sunrise and sunset times
       var sunrise = Weather.getSunrise(location, now);
       var sunset = Weather.getSunset(location, now);
-      //var sunriseInfo = Gregorian.info(sunrise, Time.FORMAT_MEDIUM);
-      //var sunsetInfo = Gregorian.info(sunset, Time.FORMAT_MEDIUM);
+      _sunriseInfo = Gregorian.info(sunrise, Time.FORMAT_MEDIUM);
+      _sunsetInfo = Gregorian.info(sunset, Time.FORMAT_MEDIUM);
 
       // check if it's day or night
       _isDay = now.value() >= sunrise.value() && now.value() <= sunset.value();
