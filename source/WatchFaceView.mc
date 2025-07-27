@@ -188,37 +188,37 @@ class WatchFaceView extends WatchUi.WatchFace {
     }
 
     // hour
-    dc.drawText(110, 85, _timeFont, dateInfo.hour.format("%02d"), Graphics.TEXT_JUSTIFY_CENTER);
+    dc.drawText(210, 85, _timeFont, dateInfo.hour.format("%02d"), Graphics.TEXT_JUSTIFY_LEFT);
 
     // minute
-    dc.drawText(110, 235, _timeFont, dateInfo.min.format("%02d"), Graphics.TEXT_JUSTIFY_CENTER);
+    dc.drawText(210, 235, _timeFont, dateInfo.min.format("%02d"), Graphics.TEXT_JUSTIFY_LEFT);
 
     // phone connected
     if (deviceSettings.phoneConnected) {
-      dc.drawText(285, _devCenter, _iconFont, "b", Graphics.TEXT_JUSTIFY_CENTER | Graphics.TEXT_JUSTIFY_VCENTER);
+      dc.drawText(70, _devCenter, _iconFont, "b", Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER);
     }
 
     // date
     var date = Lang.format("$1$ $2$", [dateInfo.day_of_week, dateInfo.day.format("%02d")]);
-    dc.drawText(50, _devCenter, Graphics.FONT_SMALL, date, Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER);
+    dc.drawText(215, _devCenter, Graphics.FONT_SMALL, date, Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER);
 
     // heart rate
-    dc.drawText(210, 80, _iconFont, "h", Graphics.TEXT_JUSTIFY_LEFT);
-    dc.drawText(255, 75, Graphics.FONT_SMALL, _dataFields.getHeartRate(), Graphics.TEXT_JUSTIFY_LEFT);
+    dc.drawText(70, 80, _iconFont, "h", Graphics.TEXT_JUSTIFY_LEFT);
+    dc.drawText(115, 75, Graphics.FONT_SMALL, _dataFields.getHeartRate(), Graphics.TEXT_JUSTIFY_LEFT);
 
     // steps
-    dc.drawText(210, 120, _iconFont, "s", Graphics.TEXT_JUSTIFY_LEFT);
-    dc.drawText(255, 115, Graphics.FONT_SMALL, _steps, Graphics.TEXT_JUSTIFY_LEFT);
+    dc.drawText(70, 120, _iconFont, "s", Graphics.TEXT_JUSTIFY_LEFT);
+    dc.drawText(115, 115, Graphics.FONT_SMALL, _steps, Graphics.TEXT_JUSTIFY_LEFT);
 
     // seconds
-    dc.drawText(210, _devCenter, Graphics.FONT_SMALL, dateInfo.sec.format("%02d"), Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER);
+    dc.drawText(115, _devCenter, Graphics.FONT_SMALL, dateInfo.sec.format("%02d"), Graphics.TEXT_JUSTIFY_LEFT | Graphics.TEXT_JUSTIFY_VCENTER);
 
     // recovery time
-    dc.drawText(210, 235, _iconFont, "r", Graphics.TEXT_JUSTIFY_LEFT);
-    dc.drawText(255, 230, Graphics.FONT_SMALL, _recoveryTime, Graphics.TEXT_JUSTIFY_LEFT);
+    dc.drawText(70, 235, _iconFont, "r", Graphics.TEXT_JUSTIFY_LEFT);
+    dc.drawText(115, 230, Graphics.FONT_SMALL, _recoveryTime, Graphics.TEXT_JUSTIFY_LEFT);
     
     // battery
-    dc.drawText(210, 270, Graphics.FONT_SMALL, _battery, Graphics.TEXT_JUSTIFY_LEFT);
+    dc.drawText(115, 270, Graphics.FONT_SMALL, _battery, Graphics.TEXT_JUSTIFY_LEFT);
     //dc.drawRectangle(200, 270, 90, 50);
 
     if (_sunsetInfo != null) {
